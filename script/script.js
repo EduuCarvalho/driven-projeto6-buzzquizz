@@ -2,8 +2,8 @@ let quizz = [];
 pegarDados();
 
 function trocarTela(esconder, mostrar) {
-  document.querySelector(esconder).classList.add("esconder");
-  document.querySelector(mostrar).classList.remove("esconder");
+	document.querySelector(esconder).classList.add("esconder");
+	document.querySelector(mostrar).classList.remove("esconder");
 }
 
 //**EDU
@@ -13,35 +13,35 @@ function trocarTela(esconder, mostrar) {
 //*/
 
 function pegarDados() {
-  const promessa = axios.get(
-    "https://mock-api.driven.com.br/api/v4/buzzquizz/quizzes"
-  );
-  promessa.then(receberQuizz);
-  promessa.catch(receberFalhou);
+	const promessa = axios.get(
+		"https://mock-api.driven.com.br/api/v4/buzzquizz/quizzes"
+	);
+	promessa.then(receberQuizz);
+	promessa.catch(receberFalhou);
 }
 
 function receberFalhou(erro) {
-  console.log(erro);
+	console.log(erro);
 }
 
 function receberQuizz(resposta) {
-  console.log(resposta);
-  quizz = resposta.data;
-  console.log(quizz);
-  renderizarQuizzesProntos();
+	console.log(resposta);
+	quizz = resposta.data;
+	console.log(quizz);
+	renderizarQuizzesProntos();
 }
 
 function renderizarQuizzesProntos() {
-  const quizzesProntos = document.querySelector(".container-quizzes");
-  quizzesProntos.innerHTML = "";
-  for (let i = 0; i < quizz.length; i++) {
-    quizzesProntos.innerHTML += `
+	const quizzesProntos = document.querySelector(".container-quizzes");
+	quizzesProntos.innerHTML = "";
+	for (let i = 0; i < quizz.length; i++) {
+		quizzesProntos.innerHTML += `
         <div id="${quizz[i].id}" onclick="extrairQuizzDesejado(this)" class="selecionar-quizz">
             <img src="${quizz[i].image}">
             <p>${quizz[i].title}</p>
         </div>
         `;
-  }
+	}
 }
 
 //**PEDRO
@@ -51,28 +51,28 @@ function renderizarQuizzesProntos() {
 //*/
 
 function extrairQuizzDesejado(objetoSelecionarQuizz) {
-  //const idQuizz = 10080;
-  const idQuizz = objetoSelecionarQuizz.id;
+	//const idQuizz = 10080;
+	const idQuizz = objetoSelecionarQuizz.id;
 
-  const promessa = axios.get(
-    `https://mock-api.driven.com.br/api/v4/buzzquizz/quizzes/${idQuizz}`
-  );
+	const promessa = axios.get(
+		`https://mock-api.driven.com.br/api/v4/buzzquizz/quizzes/${idQuizz}`
+	);
 
-  promessa.then(construirHTMLQuizzEscolhido);
-  promessa.catch(() => console.log("Quizz não pode ser carregado"));
+	promessa.then(construirHTMLQuizzEscolhido);
+	promessa.catch(() => console.log("Quizz não pode ser carregado"));
 }
 
 function construirHTMLQuizzEscolhido(objetoQuizz) {
-  console.log(objetoQuizz);
-  objetoQuizzData = objetoQuizz.data;
-  const tituloQuizz = objetoQuizzData.title;
-  const listaPerguntasQuizz = objetoQuizzData.questions;
-  const imagemTituloQuizz = objetoQuizzData.image;
+	console.log(objetoQuizz);
+	objetoQuizzData = objetoQuizz.data;
+	const tituloQuizz = objetoQuizzData.title;
+	const listaPerguntasQuizz = objetoQuizzData.questions;
+	const imagemTituloQuizz = objetoQuizzData.image;
 
-  let tituloQuizzHTML = "";
-  let perguntasFeedHTML = "";
+	let tituloQuizzHTML = "";
+	let perguntasFeedHTML = "";
 
-  tituloQuizzHTML = `
+	tituloQuizzHTML = `
   <div class="titulo-pagina-quizz" style="background-image: url('${imagemTituloQuizz}')">
     ${tituloQuizz}
   </div>
@@ -80,18 +80,18 @@ function construirHTMLQuizzEscolhido(objetoQuizz) {
   <div class="perguntas-feed">
   `;
 
-  for (i = 0; i < listaPerguntasQuizz.length; i++) {
-    const objetoPergunta = listaPerguntasQuizz[i];
+	for (i = 0; i < listaPerguntasQuizz.length; i++) {
+		const objetoPergunta = listaPerguntasQuizz[i];
 
-    const listaOpcoes = objetoPergunta.answers;
-    const tituloPergunta = objetoPergunta.title;
-    const corTituloPergunta = objetoPergunta.color;
+		const listaOpcoes = objetoPergunta.answers;
+		const tituloPergunta = objetoPergunta.title;
+		const corTituloPergunta = objetoPergunta.color;
 
-    let perguntaHTML = "";
-    let tituloPerguntaHTML = "";
-    let opcoesHTML = "";
+		let perguntaHTML = "";
+		let tituloPerguntaHTML = "";
+		let opcoesHTML = "";
 
-    tituloPerguntaHTML = `
+		tituloPerguntaHTML = `
     <div class="pergunta">
       <div class="conteudo-pergunta">
         <div class="titulo-pergunta" style="background-color: ${corTituloPergunta} ;">
@@ -100,12 +100,12 @@ function construirHTMLQuizzEscolhido(objetoQuizz) {
         <div class="opcoes-pergunta">
         `;
 
-    for (j = 0; j < listaOpcoes.length; j++) {
-      const objetoOpcao = listaOpcoes[j];
+		for (j = 0; j < listaOpcoes.length; j++) {
+			const objetoOpcao = listaOpcoes[j];
 
-      const validacaoOpcao = objetoOpcao.isCorrectAnswer;
+			const validacaoOpcao = objetoOpcao.isCorrectAnswer;
 
-      const opcaoHTML = `
+			const opcaoHTML = `
           <div class="opcao resposta-${validacaoOpcao}">
             <input
               type="image"
@@ -117,29 +117,29 @@ function construirHTMLQuizzEscolhido(objetoQuizz) {
           </div>
           `;
 
-      opcoesHTML += opcaoHTML;
-    }
+			opcoesHTML += opcaoHTML;
+		}
 
-    const fecharDivPergunta = `
+		const fecharDivPergunta = `
     </div>
     </div>
     </div>
     `;
 
-    perguntaHTML = tituloPerguntaHTML + opcoesHTML + fecharDivPergunta;
-    perguntasFeedHTML += perguntaHTML;
-  }
+		perguntaHTML = tituloPerguntaHTML + opcoesHTML + fecharDivPergunta;
+		perguntasFeedHTML += perguntaHTML;
+	}
 
-  const fecharDivPerguntasFeed = `
+	const fecharDivPerguntasFeed = `
   </div>
   `;
 
-  const paginaQuizzHTML =
-    tituloQuizzHTML + perguntasFeedHTML + fecharDivPerguntasFeed;
+	const paginaQuizzHTML =
+		tituloQuizzHTML + perguntasFeedHTML + fecharDivPerguntasFeed;
 
-  document.querySelector(".pagina-quizz").innerHTML = paginaQuizzHTML;
+	document.querySelector(".pagina-quizz").innerHTML = paginaQuizzHTML;
 
-  trocarTela(".pagina-inicial", ".pagina-quizz");
+	trocarTela(".pagina-inicial", ".pagina-quizz");
 }
 
 // funçao verificar resposta certa - Pedro
