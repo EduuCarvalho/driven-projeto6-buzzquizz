@@ -36,7 +36,7 @@ function renderizarQuizzesProntos() {
   quizzesProntos.innerHTML = "";
   for (let i = 0; i < quizz.length; i++) {
     quizzesProntos.innerHTML += `
-        <div id="${quizz[i].id}" onclick="extrairQuizDesejado(this)" class="selecionar-quizz">
+        <div id="${quizz[i].id}" onclick="extrairQuizzDesejado(this)" class="selecionar-quizz">
             <img src="${quizz[i].image}">
             <p>${quizz[i].title}</p>
         </div>
@@ -50,7 +50,7 @@ function renderizarQuizzesProntos() {
 //
 //*/
 
-function extrairQuizDesejado(objetoSelecionarQuizz) {
+function extrairQuizzDesejado(objetoSelecionarQuizz) {
   //const idQuizz = 10080;
   const idQuizz = objetoSelecionarQuizz.id;
 
@@ -142,7 +142,7 @@ function construirHTMLQuizzEscolhido(objetoQuizz) {
   trocarTela(".pagina-inicial", ".pagina-quizz");
 }
 
-// funçao verificar resposta certa
+// funçao verificar resposta certa - Pedro
 
 //**VINI
 //
