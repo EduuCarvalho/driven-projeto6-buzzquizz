@@ -1,13 +1,14 @@
 <!DOCTYPE html>
 <html lang="pt-br">
-  <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>BuzzQuizz</title>
 
-    <link rel="stylesheet" href="styles/style.css" />
-    <link rel="stylesheet" href="styles/reset.css" />
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BuzzQuizz</title>
+
+  <link rel="stylesheet" href="styles/style.css" />
+  <link rel="stylesheet" href="styles/reset.css" />
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -36,15 +37,90 @@
         </div>
       </div>
 
-      <div class="pagina-quizz esconder">
-        
+    <!-- PEDRO -->
+    <div class="pagina-quizz esconder">
+
+    </div>
+
+    <!-- VINI -->
+    <div class="criar-quizz esconder esconder">
+      <!-- Vini -->
+
+      <div class="info-quizz">
+        <form action="javascript:" onsubmit="testeForm(this)">
+          <p>Comece pelo começo</p>
+          <div class="form-container">
+            <fieldset>
+              <input id="titulo" type="text" placeholder="Título do seu quizz" minlength="20" maxlength="65">
+              <input type="url" placeholder="URL da imagem do seu quizz">
+              <input type="number" placeholder="Quantidade de perguntas do quizz" min="3">
+              <input type="number" placeholder="Quantidade de níveis do quizz" min="2">
+            </fieldset>
+          </div>
+          <input type="submit" value="Prosseguir para criar perguntas">
+        </form>
       </div>
 
-      <div class="criar-quizz esconder">
-        <!-- Vini -->
+      <div class="criar-perguntas">
+        <form action="javascript:" onsubmit="testeForm(this)">
+          <p>Crie suas perguntas</p>
+          <div class="form-container">
+
+            <!-- PERGUNTA1 -->
+            <fieldset class="">
+              <div class="legend">Pergunta 1
+                <ion-icon name="create-outline" class="esconder"></ion-icon>
+              </div class="legend">
+              <input type="text" placeholder="Texto da pergunta" minlength="20" required>
+              <input type="text" placeholder="Cor de fundo da pergunta" required>
+            </fieldset>
+
+            <!-- RESPOSTA CORRETA -->
+            <fieldset class="reposta-correta">
+              <div class="legend">Resposta correta</div class="legend">
+              <input type="text" placeholder="Resposta correta" minlength="" required>
+              <input type="url" placeholder="URL da imagem do seu quizz" required>
+            </fieldset>
+
+            <!-- RESPOSTAS INCORRETAS -->
+            <fieldset class="respostas-incorretas">
+              <div class="legend">Respostas incorretas</div class="legend">
+              <fieldset>
+                <input type="text" placeholder="Resposta incorreta 1" minlength="" required>
+                <input type="url" placeholder="URL da imagem do seu quizz" required>
+              </fieldset>
+
+              <fieldset>
+                <input type="text" placeholder="Resposta incorreta 2" minlength="" required>
+                <input type="url" placeholder="URL da imagem do seu quizz">
+              </fieldset>
+
+              <fieldset>
+                <input type="text" placeholder="Resposta incorreta 3" minlength="">
+                <input type="url" placeholder="URL da imagem do seu quizz">
+              </fieldset>
+
+            </fieldset>
+          </div>
+
+          <!-- PERGUNTA 2 -->
+          <div class="form-container form-fechado">
+            <fieldset class="">
+              <div class="legend">Pergunta 2
+                <ion-icon name="create-outline"></ion-icon>
+              </div class="legend">
+            </fieldset>
+          </div>
+        </form>
       </div>
     </div>
-    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-    <script src="./script/script.js"></script>
-  </body>
+
+  </div>
+  <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+  <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <script src="./script/script.js"></script>
+</body>
+
 </html>
