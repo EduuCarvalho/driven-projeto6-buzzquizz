@@ -1,4 +1,7 @@
-let quizz = [];
+let quizz = [],
+	quizzEscolhido,
+	pontosObtidos;
+
 pegarDados();
 
 function trocarTela(esconder, mostrar) {
@@ -36,7 +39,7 @@ function renderizarQuizzesProntos() {
 	quizzesProntos.innerHTML = "";
 	for (let i = 0; i < quizz.length; i++) {
 		quizzesProntos.innerHTML += `
-        <div id="${quizz[i].id}" onclick="extrairQuizzDesejado(this)" class="selecionar-quizz">
+        <div id="${quizz[i].id}" onclick="extrairQuizzEscolhido(this)" class="selecionar-quizz">
             <img src="${quizz[i].image}">
             <p>${quizz[i].title}</p>
         </div>
@@ -50,9 +53,9 @@ function renderizarQuizzesProntos() {
 //
 //*/
 
-function extrairQuizzDesejado(objetoSelecionarQuizz) {
-	//const idQuizz = 10080;
-	const idQuizz = objetoSelecionarQuizz.id;
+function extrairQuizzEscolhido(objetoSelecionarQuizz) {
+	const idQuizz = 10080;
+	//const idQuizz = objetoSelecionarQuizz.id;
 
 	const promessa = axios.get(
 		`https://mock-api.driven.com.br/api/v4/buzzquizz/quizzes/${idQuizz}`
@@ -64,7 +67,9 @@ function extrairQuizzDesejado(objetoSelecionarQuizz) {
 
 function construirHTMLQuizzEscolhido(objetoQuizz) {
 	console.log(objetoQuizz);
-	objetoQuizzData = objetoQuizz.data;
+	quizzEscolhido = objetoQuizz;
+	objetoQuizzData = quizzEscolhido.data;
+
 	const tituloQuizz = objetoQuizzData.title;
 	const listaPerguntasQuizz = objetoQuizzData.questions;
 	const imagemTituloQuizz = objetoQuizzData.image;
@@ -80,7 +85,7 @@ function construirHTMLQuizzEscolhido(objetoQuizz) {
   <div class="perguntas-feed">
   `;
 
-	for (i = 0; i < listaPerguntasQuizz.length; i++) {
+	for (let i = 0; i < listaPerguntasQuizz.length; i++) {
 		const objetoPergunta = listaPerguntasQuizz[i];
 
 		const listaOpcoes = objetoPergunta.answers;
@@ -94,26 +99,30 @@ function construirHTMLQuizzEscolhido(objetoQuizz) {
 		tituloPerguntaHTML = `
     <div class="pergunta">
       <div class="conteudo-pergunta">
-        <div class="titulo-pergunta" style="background-color: ${corTituloPergunta} ;">
+        <div class="titulo-pergunta" style="background-color: ${corTituloPergunta};">
           <bold>${tituloPergunta}</bold>
         </div>
         <div class="opcoes-pergunta">
         `;
 
-		for (j = 0; j < listaOpcoes.length; j++) {
+		for (let j = 0; j < listaOpcoes.length; j++) {
 			const objetoOpcao = listaOpcoes[j];
 
 			const validacaoOpcao = objetoOpcao.isCorrectAnswer;
 
 			const opcaoHTML = `
-          <div class="opcao resposta-${validacaoOpcao}">
+          <div class="opcao">
             <input
+			  class="resposta-${validacaoOpcao}"
               type="image"
-              id="ocpao${j + 1}"
+			  id='{"pergunta":${i}, "opcao":${j}}'
               alt="Opcao ${j + 1}"
               src="${objetoOpcao.image}"
+			  onclick="verificarRespostaCerta(this)"
             />
-            <label for="ocpao1"><bold>${objetoOpcao.text}</bold></label>
+            <label for='{"pergunta":${i}, "opcao":${j}}'><bold>${
+				objetoOpcao.text
+			}</bold></label>
           </div>
           `;
 
@@ -140,9 +149,45 @@ function construirHTMLQuizzEscolhido(objetoQuizz) {
 	document.querySelector(".pagina-quizz").innerHTML = paginaQuizzHTML;
 
 	trocarTela(".pagina-inicial", ".pagina-quizz");
+	pontosObtidos = 0;
 }
 
 // funçao verificar resposta certa - Pedro
+function verificarRespostaCerta(inputEscolhido) {
+	objetoOpcaoEscolhida = JSON.parse(inputEscolhido.id);
+	console.log(objetoOpcaoEscolhida);
+
+	perguntaEscolhida = objetoOpcaoEscolhida.pergunta;
+
+	qtdOpcoes = quizzEscolhido.data.questions[perguntaEscolhida].answers.length;
+
+	if (inputEscolhido.classList.contains("resposta-true")) {
+		pontosObtidos += 1;
+	}
+
+	for (let i = 0; i < qtdOpcoes; i++) {
+		let inputAtual = document.getElementById(
+			`{"pergunta":${perguntaEscolhida}, "opcao":${i}}`
+		);
+
+		if (inputAtual.classList.contains("resposta-true")) {
+			inputAtual.classList.add("opcao-certa");
+
+			inputAtual.parentNode
+				.querySelector("label")
+				.classList.add("opcao-certa");
+		} else {
+			inputAtual.classList.add("opcao-errada");
+
+			inputAtual.parentNode
+				.querySelector("label")
+				.classList.add("opcao-errada");
+		}
+
+		inputAtual.disabled = true;
+	}
+	console.log(pontosObtidos);
+}
 
 //**VINI
 //
