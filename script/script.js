@@ -28,9 +28,9 @@ function receberFalhou(erro) {
 }
 
 function receberQuizz(resposta) {
-	console.log(resposta);
+	// console.log(resposta);
 	quizz = resposta.data;
-	console.log(quizz);
+	// console.log(quizz);
 	renderizarQuizzesProntos();
 }
 
@@ -120,9 +120,8 @@ function construirHTMLQuizzEscolhido(objetoQuizz) {
               src="${objetoOpcao.image}"
 			  onclick="verificarRespostaCerta(this)"
             />
-            <label for='{"pergunta":${i}, "opcao":${j}}'><bold>${
-				objetoOpcao.text
-			}</bold></label>
+            <label for='{"pergunta":${i}, "opcao":${j}}'><bold>${objetoOpcao.text
+				}</bold></label>
           </div>
           `;
 
@@ -194,3 +193,69 @@ function verificarRespostaCerta(inputEscolhido) {
 //
 //
 //*/
+
+const infoQuizzForm = document.querySelector(".info-quizz form");
+const criarPerguntasForm = document.querySelector(".criar-perguntas form");
+const formDataObj = {};
+
+infoQuizzForm.addEventListener("submit", (event) => {
+	event.preventDefault();
+	const myFormData = new FormData(event.target);
+	myFormData.forEach((value, key) => (formDataObj[key] = value));
+
+	console.log(myFormData);
+
+	if (formDataObj.title < 20 || formDataObj.title > 66 || formDataObj.quantidadePerguntas < 4 || formDataObj.quantidadeNiveis < 3) {
+		alert("Preencha direito!");
+		return;
+	}
+
+	criarPerguntas();
+	console.log(formDataObj);
+});
+
+function criarPerguntas() {
+	////		ESCONDER 	, 		MOSTRAR
+	// trocarTela(infoQuizzForm, criarPerguntasForm);
+
+	for (let i = 0; i < Number(formDataObj.quantidadePerguntas); i++) {
+
+		criarPerguntasForm.innerHTML += `
+				<div class="form-container form-fechado">
+						<fieldset class="">
+							<div class="legend">Pergunta ${i + 1}
+								<ion-icon name="create-outline"></ion-icon>
+							</div class="legend">
+						</fieldset>
+					</div>
+				</form>
+		`;
+	}
+
+
+}
+
+function criarQuizz(obj) {
+	const promise = axios.post('https://mock-api.driven.com.br/api/v4/buzzquizz/quizzes', obj);
+}
+
+const botoes = [...document.querySelectorAll(".dobravel")];
+
+botoes.forEach(e => {
+	e.addEventListener("click", () => {
+		e.classList.toggle("ativo");
+		const content = e.nextElementSibling;
+
+		if (content.style.display === "block") {
+			content.style.display = "none";
+		} else {
+			content.style.display = "block";
+		}
+
+		// if (content.style.display === "block") {
+		// 	content.style.display = "none";
+		// } else {
+		// 	content.style.display = "block";
+		// }
+	})
+});
