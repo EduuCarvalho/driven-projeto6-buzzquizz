@@ -212,9 +212,12 @@ function verificarRespostaCerta(inputEscolhido) {
 const infoQuizzForm = document.querySelector(".info-quizz form");
 const criarPerguntasForm = document.querySelector(".criar-perguntas form");
 const formDataObj = {};
-const objCriarQuizz = {};
-const objCriarPerguntas = {};
-const objCriarNiveis = {};
+
+const objQuizzCompleto = {
+	title: "",
+	image: "",
+	questions: []
+};
 
 infoQuizzForm.addEventListener("submit", (event) => {
 	event.preventDefault();
@@ -226,31 +229,66 @@ infoQuizzForm.addEventListener("submit", (event) => {
 		return;
 	}
 
+	objQuizzCompleto.title = formDataObj.title;
+	objQuizzCompleto.image = formDataObj.image;
+
 	criarPerguntas();
 });
 
-criarPerguntasForm.addEventListener("submit", (event) => {
-	event.preventDefault();
-	const myFormData = new FormData(event.target);
-	const pergunta = {};
+function criarObjQuizz() {
 
-	myFormData.forEach((value, key) => (objCriarPerguntas[key] = value));
+	//TODAS PERGUNAS 1, PERGUNTA 2, PERGUNTA 3 ...
+	const perguntas = [...document.querySelectorAll(".criar-perguntas form .form-container")];
 
-	console.log(objCriarPerguntas);
-})
+	//PERCORRE TODAS AS PERGUNTAS E ADICIONA PROPRIEDADES AO objPerguntas
+	perguntas.forEach(formContainer => {
+		const objPerguntas = {
+			title: "",
+			color: "",
+			answers: []
+		}
 
-function formParaObj(event) {
-	// form.addEventListener("submit", (event) => {
-	event.preventDefault();
+		objPerguntas.title = formContainer.querySelector("input[name='title']").value;
+		objPerguntas.color = formContainer.querySelector("input[name='color']").value;
 
-	const myFormData = new FormData(event.target);
-	const formDataObjt = {};
+		const fieldsets = [...formContainer.querySelectorAll(".criar-quizz-respostas fieldset")];
 
-	myFormData.forEach((value, key) => (formDataObjt[key] = value));
+		fieldsets.forEach(field => {
+			const answer = buscarResposta(field);
+			if (answer !== undefined) {
+				objPerguntas.answers.push(answer);
+			}
+		});
 
-	console.log(formDataObjt);
-	return formDataObjt;
-	// })
+		objQuizzCompleto.questions.push(objPerguntas);
+	});
+
+
+	console.log(objQuizzCompleto);
+}
+
+function buscarResposta(fieldset) {
+	const objResposta = {
+		text: "",
+		image: "",
+		isCorrectAnswer: false
+	}
+
+	if (fieldset.classList.value === "resposta-correta") {
+		// console.log("resposta correta");
+		objResposta.text = fieldset.querySelector("input[name='text']").value;
+		objResposta.image = fieldset.querySelector("input[name='image']").value;
+		objResposta.isCorrectAnswer = true;
+		return objResposta;
+
+	} else if (fieldset.parentNode.classList.value === "respostas-incorretas") {
+		// console.log("resposta incoreta");
+		objResposta.text = fieldset.querySelector("input[name='text']").value;
+		objResposta.image = fieldset.querySelector("input[name='image']").value;
+		objResposta.isCorrectAnswer = false;
+		return objResposta;
+	}
+
 }
 
 function criarPerguntas() {
@@ -262,7 +300,7 @@ function criarPerguntas() {
 
 	}
 
-	criarPerguntasForm.innerHTML += `<input type="submit" value="Prosseguir para criar níveis">`;
+	criarPerguntasForm.innerHTML += `<input type="submit" value="Prosseguir para criar níveis" onclick="criarObjQuizz()">`;
 
 	botoes = [...document.querySelectorAll(".dobravel")];
 }
@@ -274,7 +312,7 @@ function criarNiveis() {
 
 function divPerguntas(i) {
 	return `
-				<div class="form-container">
+				<div class="form-container" >
 						<div class="dobravel pergunta-numero" onclick="abrirCaixaDobravel(this)">
 						Pergunta ${i + 1}
 							<ion-icon name="create-outline" class="esconder"></ion-icon>
@@ -283,34 +321,34 @@ function divPerguntas(i) {
 						<div class="conteudo-dobravel">
 
 							<fieldset class="">
-								<input name="${i + 1}tituloPergunta" type="text" placeholder="Texto da pergunta" minlength="20">
-								<input name="${i + 1}corPergunta" type="text" placeholder="Cor de fundo da pergunta">
+								<input name="title" type="text" placeholder="Texto da pergunta" minlength="20">
+								<input name="color" type="text" placeholder="Cor de fundo da pergunta">
 							</fieldset>
 
-						<div class="criar-quizz-perguntas">
+						<div class="criar-quizz-respostas">
 							<!-- RESPOSTA CORRETA -->
-							<fieldset class="reposta-correta">
+							<fieldset class="resposta-correta">
 								<div class="legend">Resposta correta</div class="legend">
-								<input name="${i + 1}respostaCorreta" type="text" placeholder="Resposta correta" minlength="">
-								<input name="${i + 1}imagemCorreta" type="url" placeholder="URL da imagem do seu quizz">
+								<input name="text" type="text" placeholder="Resposta correta" minlength="">
+								<input name="image" type="url" placeholder="URL da imagem do seu quizz">
 							</fieldset>
 
 							<!-- RESPOSTAS INCORRETAS -->
 							<fieldset class="respostas-incorretas">
 								<div class="legend">Respostas incorretas</div class="legend">
 								<fieldset>
-									<input name="${i + 1}respostaIncorreta1" type="text" placeholder="Resposta incorreta 1" minlength="">
-									<input name="${i + 1}imagemIncorreta1" type="url" placeholder="URL da imagem do seu quizz">
+									<input name="text" type="text" placeholder="Resposta incorreta 1" minlength="">
+									<input name="image" type="url" placeholder="URL da imagem do seu quizz">
 								</fieldset>
 
 								<fieldset>
-									<input name="${i + 1}respostaIncorreta2" type="text" placeholder="Resposta incorreta 2" minlength="">
-									<input name="${i + 1}imagemIncorreta2" type="url" placeholder="URL da imagem do seu quizz">
+									<input name="text" type="text" placeholder="Resposta incorreta 2" minlength="">
+									<input name="image" type="url" placeholder="URL da imagem do seu quizz">
 								</fieldset>
 
 								<fieldset>
-									<input name="${i + 1}respostaIncorreta3" type="text" placeholder="Resposta incorreta 3" minlength="">
-									<input name="${i + 1}imagemIncorreta3" type="url" placeholder="URL da imagem do seu quizz">
+									<input name="text" type="text" placeholder="Resposta incorreta 3" minlength="">
+									<input name="image" type="url" placeholder="URL da imagem do seu quizz">
 								</fieldset>
 							</fieldset>
 						</div>
