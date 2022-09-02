@@ -19,7 +19,7 @@
 	<bold class="topo-fixo-buzzquizz">BuzzQuizz</bold>
 
 	<div class="conteudo-pagina">
-		<div class="pagina-inicial">
+		<div class="pagina-inicial esconder">
 			<!-- Edu -->
 			<div class="caixa-criarQuizz">
 				<p>Você não criou nenhum <br>quizz ainda :(</br></p>
@@ -44,7 +44,7 @@
 		</div>
 
 		<!-- VINI -->
-		<div class="criar-quizz esconder">
+		<div class="criar-quizz">
 
 			<div class="info-quizz">
 				<form>
@@ -52,24 +52,25 @@
 					<div class="form-container">
 						<fieldset>
 							<input id="titulo" name="title" type="text" placeholder="Título do seu quizz">
-							<input name="image" type="url" placeholder="URL da imagem do seu quizz">
-							<input name="quantidadePerguntas" type="number"
+							<input id="imagem-quizz" name="image" type="url" placeholder="URL da imagem do seu quizz">
+							<input id="quantidadePerguntas" name="quantidadePerguntas" type="number"
 								placeholder="Quantidade de perguntas do quizz">
-							<input name="quantidadeNiveis" type="number" placeholder="Quantidade de níveis do quizz">
+							<input id="quantidadeNiveis" name="quantidadeNiveis" type="number"
+								placeholder="Quantidade de níveis do quizz">
 						</fieldset>
 					</div>
-					<input type="submit" value="Prosseguir para criar perguntas">
+					<div onclick="submeterDadosQuizz()">Proseguir para </div>
 				</form>
 			</div>
 
 			<div class="criar-perguntas esconder">
-				<form action="" onsubmit="">
+				<form>
 					<p>Crie suas perguntas</p>
 				</form>
 			</div>
 
 			<div class="criar-niveis esconder">
-				<form action="">
+				<form>
 					<p>Agora, decida os níveis</p>
 
 				</form>

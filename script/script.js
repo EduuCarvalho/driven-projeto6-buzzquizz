@@ -1,7 +1,15 @@
-let quizzUsuario = [];
-let quizz = [],
+let quizzUsuario = [],
+	quizz = [],
 	quizzEscolhido,
-	pontosObtidos;
+	pontosObtidos,
+	qtdPerguntasNovoQuizz,
+	qtdNiveisNovoQuizz,
+	objetoNovoQuizz = {};
+
+const criarPerguntasForm = document.querySelector(".criar-perguntas form");
+// console.log(criarPerguntasForm);
+const criarNiveisForm = document.querySelector(".criar-niveis form");
+//console.log(criarNiveisForm);
 
 pegarDados();
 
@@ -136,8 +144,9 @@ function construirHTMLQuizzEscolhido(objetoQuizz) {
               src="${objetoOpcao.image}"
 			  onclick="verificarRespostaCerta(this)"
             />
-            <label for='{"pergunta":${i}, "opcao":${j}}'><bold>${objetoOpcao.text
-				}</bold></label>
+            <label for='{"pergunta":${i}, "opcao":${j}}'><bold>${
+				objetoOpcao.text
+			}</bold></label>
           </div>
           `;
 
@@ -167,7 +176,6 @@ function construirHTMLQuizzEscolhido(objetoQuizz) {
 	pontosObtidos = 0;
 }
 
-// funçao verificar resposta certa - Pedro
 function verificarRespostaCerta(inputEscolhido) {
 	objetoOpcaoEscolhida = JSON.parse(inputEscolhido.id);
 	console.log(objetoOpcaoEscolhida);
@@ -230,139 +238,212 @@ function randomizarArray(array) {
 //
 //*/
 
-const infoQuizzForm = document.querySelector(".info-quizz form");
-const criarPerguntasForm = document.querySelector(".criar-perguntas form");
-const formDataObj = {};
-const objCriarQuizz = {};
-const objCriarPerguntas = {};
-const objCriarNiveis = {};
-
-infoQuizzForm.addEventListener("submit", (event) => {
-	event.preventDefault();
-	const myFormData = new FormData(event.target);
-	myFormData.forEach((value, key) => (formDataObj[key] = value));
-
-	if (formDataObj.title < 10 || formDataObj.title > 66 || formDataObj.quantidadePerguntas < 2 || formDataObj.quantidadeNiveis < 2) {
-		alert("Preencha direito!");
-		return;
-	}
-
-	criarPerguntas();
-});
-
-criarPerguntasForm.addEventListener("submit", (event) => {
-	event.preventDefault();
-	const myFormData = new FormData(event.target);
-	const pergunta = {};
-
-	myFormData.forEach((value, key) => (objCriarPerguntas[key] = value));
-
-	console.log(objCriarPerguntas);
-})
-
-function formParaObj(event) {
-	// form.addEventListener("submit", (event) => {
-	event.preventDefault();
-
-	const myFormData = new FormData(event.target);
-	const formDataObjt = {};
-
-	myFormData.forEach((value, key) => (formDataObjt[key] = value));
-
-	console.log(formDataObjt);
-	return formDataObjt;
-	// })
-}
-
 function criarPerguntas() {
 	////		ESCONDER 	, 		MOSTRAR
 	trocarTela(".info-quizz", ".criar-perguntas");
 
-	for (let i = 0; i < Number(formDataObj.quantidadePerguntas); i++) {
+	for (let i = 0; i < Number(qtdPerguntasNovoQuizz); i++) {
 		criarPerguntasForm.innerHTML += divPerguntas(i);
-
 	}
 
-	criarPerguntasForm.innerHTML += `<input type="submit" value="Prosseguir para criar níveis">`;
-
-	botoes = [...document.querySelectorAll(".dobravel")];
+	criarPerguntasForm.innerHTML += `<div onclick="submeterPerguntasQuizz()">Proseguir para </div>`;
 }
 
 function criarNiveis() {
 	////		ESCONDER 	, 		MOSTRAR
 	trocarTela(".criar-perguntas", ".criar-niveis");
+	for (let i = 0; i < Number(qtdNiveisNovoQuizz); i++) {
+		criarNiveisForm.innerHTML += divNiveis(i);
+	}
+
+	criarNiveisForm.innerHTML += `<div onclick="submeterNiveisQuizz()">Proseguir para </div>`;
 }
 
 function divPerguntas(i) {
 	return `
-				<div class="form-container">
+				<div class="form-container divPergunta">
 						<div class="dobravel pergunta-numero" onclick="abrirCaixaDobravel(this)">
 						Pergunta ${i + 1}
-							<ion-icon name="create-outline" class="esconder"></ion-icon>
+							<ion-icon id="create-outline" class="esconder"></ion-icon>
 						</div>
 
 						<div class="conteudo-dobravel">
 
-							<fieldset class="">
-								<input name="${i + 1}tituloPergunta" type="text" placeholder="Texto da pergunta" minlength="20">
-								<input name="${i + 1}corPergunta" type="text" placeholder="Cor de fundo da pergunta">
+							<fieldset class="info-gerais-pergunta">
+								<input class="tituloPergunta" type="text" placeholder="Texto da pergunta" minlength="20">
+								<input class="corPergunta" type="text" placeholder="Cor de fundo da pergunta">
 							</fieldset>
 
-						<div class="criar-quizz-perguntas">
+						<div class="opcoes-respostas">
 							<!-- RESPOSTA CORRETA -->
 							<fieldset class="reposta-correta">
 								<div class="legend">Resposta correta</div class="legend">
-								<input name="${i + 1}respostaCorreta" type="text" placeholder="Resposta correta" minlength="">
-								<input name="${i + 1}imagemCorreta" type="url" placeholder="URL da imagem do seu quizz">
+								<input class="resposta" type="text" placeholder="Resposta correta" minlength="">
+								<input class="imagem" type="url" placeholder="URL da imagem do seu quizz">
 							</fieldset>
 
 							<!-- RESPOSTAS INCORRETAS -->
-							<fieldset class="respostas-incorretas">
+							<div class="respostas-incorretas">
 								<div class="legend">Respostas incorretas</div class="legend">
 								<fieldset>
-									<input name="${i + 1}respostaIncorreta1" type="text" placeholder="Resposta incorreta 1" minlength="">
-									<input name="${i + 1}imagemIncorreta1" type="url" placeholder="URL da imagem do seu quizz">
+									<input class="resposta" type="text" placeholder="Resposta incorreta 1" minlength="">
+									<input class="imagem" type="url" placeholder="URL da imagem do seu quizz">
 								</fieldset>
 
 								<fieldset>
-									<input name="${i + 1}respostaIncorreta2" type="text" placeholder="Resposta incorreta 2" minlength="">
-									<input name="${i + 1}imagemIncorreta2" type="url" placeholder="URL da imagem do seu quizz">
+									<input class = "resposta" type="text" placeholder="Resposta incorreta 2" minlength="">
+									<input class = "imagem" type="url" placeholder="URL da imagem do seu quizz">
 								</fieldset>
 
 								<fieldset>
-									<input name="${i + 1}respostaIncorreta3" type="text" placeholder="Resposta incorreta 3" minlength="">
-									<input name="${i + 1}imagemIncorreta3" type="url" placeholder="URL da imagem do seu quizz">
+									<input class = "resposta" type="text" placeholder="Resposta incorreta 3" minlength="">
+									<input class = "imagem" type="url" placeholder="URL da imagem do seu quizz">
 								</fieldset>
-							</fieldset>
+							</div>
 						</div>
 						</div>
 					</div>
-		`
+		`;
 }
 
 function divNiveis(i) {
 	return `<div class="form-container">
-						<div class="dobravel pergunta-numero" onclick="abrirCaixaDobravel(this)">Nível ${i + 1}
+						<div class="dobravel pergunta-numero" onclick="abrirCaixaDobravel(this)">Nível ${
+							i + 1
+						}
 							<ion-icon name="create-outline" class="esconder"></ion-icon>
 						</div>
 
 						<div class="conteudo-dobravel">
 							<fieldset class="">
-								<input name="" type="text" placeholder="Titulo do nivel" minlength="20">
-								<input name="" type="text" placeholder="% de acerto minimo">
-								<input type="text" placeholder="URL da imagem do nível">
-								<input type="text" placeholder="Descrição do nível">
+								<input class="titulo-nivel" type="text" placeholder="Titulo do nivel" minlength="20">
+								<input class="acerto-minimo-nivel" type="text" placeholder="% de acerto minimo">
+								<input class="imagem-nivel"type="text" placeholder="URL da imagem do nível">
+								<input class="text-nivel" type="text" placeholder="Descrição do nível">
 							</fieldset>
 						</div>
 					</div>
-					`
-}
-
-function criarQuizz(obj) {
-	const promise = axios.post('https://mock-api.driven.com.br/api/v4/buzzquizz/quizzes', obj);
+					`;
 }
 
 function abrirCaixaDobravel(e) {
 	const content = e.nextElementSibling;
 	content.classList.toggle("ativo");
+}
+
+function submeterDadosQuizz() {
+	objetoNovoQuizz["title"] = document.getElementById("titulo").value;
+	objetoNovoQuizz["image"] = document.getElementById("imagem-quizz").value;
+
+	qtdPerguntasNovoQuizz = document.getElementById(
+		"quantidadePerguntas"
+	).value;
+	qtdNiveisNovoQuizz = document.getElementById("quantidadeNiveis").value;
+
+	document.getElementById("titulo").value = "";
+	document.getElementById("imagem-quizz").value = "";
+	document.getElementById("quantidadePerguntas").value = "";
+	document.getElementById("quantidadeNiveis").value = "";
+
+	criarPerguntas();
+}
+
+function submeterPerguntasQuizz() {
+	let listaPerguntasHTML = document.querySelectorAll(".divPergunta");
+	let listaPerguntas = [];
+
+	console.log("listaPerguntasHTML" + listaPerguntasHTML);
+
+	for (let i = 0; i < qtdPerguntasNovoQuizz; i++) {
+		listaPerguntas.push({
+			title: listaPerguntasHTML[i].querySelector(".tituloPergunta").value,
+			color: listaPerguntasHTML[i].querySelector(".corPergunta").value,
+			answers: resgatarRespostas(listaPerguntasHTML[i]),
+		});
+	}
+
+	objetoNovoQuizz["questions"] = listaPerguntas;
+
+	console.log("objetoAposCriarPerguntas" + objetoNovoQuizz);
+	console.log("listaPerguntas" + listaPerguntas);
+
+	criarNiveis();
+}
+
+function resgatarRespostas(perguntaAtual) {
+	const listaOpcoesHTML = perguntaAtual.querySelectorAll(
+		".opcoes-respostas fieldset"
+	);
+
+	let listaRespostas = [];
+
+	for (let j = 0; j < listaOpcoesHTML.length; j++) {
+		const valorInputResposta =
+			listaOpcoesHTML[j].querySelector(".resposta");
+
+		const valorInputImagem = listaOpcoesHTML[j].querySelector(".imagem");
+
+		if (j === 0) {
+			listaRespostas.push({
+				text: valorInputResposta.value,
+				image: valorInputImagem.value,
+				isCorrectAnswer: true,
+			});
+
+			valorInputResposta.value = "";
+			valorInputImagem.value = "";
+		} else {
+			listaRespostas.push({
+				text: valorInputResposta.value,
+				image: valorInputImagem.value,
+				isCorrectAnswer: false,
+			});
+
+			valorInputResposta.value = "";
+			valorInputImagem.value = "";
+		}
+	}
+
+	return listaRespostas;
+}
+
+function submeterNiveisQuizz() {
+	let listaNiveis = [];
+
+	const listaNiveisHTML = document.querySelectorAll(
+		".criar-niveis .form-container"
+	);
+
+	for (let i = 0; i < listaNiveisHTML.length; i++) {
+		const titulo = listaNiveisHTML[i].querySelector(".titulo-nivel");
+		const image = listaNiveisHTML[i].querySelector(".imagem-nivel");
+		const texto = listaNiveisHTML[i].querySelector(".text-nivel");
+		const acertoMinimoNivel = listaNiveisHTML[i].querySelector(
+			".acerto-minimo-nivel"
+		);
+
+		listaNiveis.push({
+			title: titulo.value,
+			image: image.value,
+			text: texto.value,
+			minValue: acertoMinimoNivel.value,
+		});
+
+		titulo.value = "";
+		image.value = "";
+		texto.value = "";
+		acertoMinimoNivel.value = "";
+	}
+
+	objetoNovoQuizz["levels"] = listaNiveis;
+
+	trocarTela(".criar-niveis", ".info-quizz");
+	console.log(objetoNovoQuizz);
+}
+
+function criarQuizz(obj) {
+	const promise = axios.post(
+		"https://mock-api.driven.com.br/api/v4/buzzquizz/quizzes",
+		obj
+	);
 }
