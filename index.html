@@ -30,78 +30,59 @@
 					<div class="titulo-quizz-criado">Seus Quizzes</div>
 					<ion-icon class="botaoAddQuizz" name="add-circle"></ion-icon>
 				</div>
-				<div class="container-quizzCriado">
-
-				</div>
+				<div class="container-quizzCriado"></div>
 			</div>
-			=======
-			<div class="conteudo-pagina">
-				<div class="pagina-inicial">
-					<!-- Edu -->
-					<div class="caixa-criarQuizz">
-						<p>Você não criou nenhum <br>quizz ainda :(</br></p>
-						<button class="criarQuizz1">Criar Quizz</button>
+
+			<div class="titulo-todos-quizzes">Todos os Quizzes</div>
+			<div class="container-quizzes"></div>
+		</div>
+
+
+		<!-- PEDRO -->
+		<div class="pagina-quizz esconder">
+
+		</div>
+
+		<!-- VINI -->
+		<div class="criar-quizz esconder">
+
+			<div class="info-quizz">
+				<form>
+					<p>Comece pelo começo</p>
+					<div class="form-container">
+						<fieldset>
+							<input id="titulo" name="title" type="text" placeholder="Título do seu quizz">
+							<input name="image" type="url" placeholder="URL da imagem do seu quizz">
+							<input name="quantidadePerguntas" type="number"
+								placeholder="Quantidade de perguntas do quizz">
+							<input name="quantidadeNiveis" type="number" placeholder="Quantidade de níveis do quizz">
+						</fieldset>
 					</div>
-					<div class="caixa-quizzCriado">
-						<div class="tituloBotao-quizzCriado">
-							<div class="titulo-quizz-criado">Seus Quizzes</div>
-							<ion-icon class="botaoAddQuizz" name="add-circle"></ion-icon>
-						</div>
-						<div class="container-quizzCriado">
-
-						</div>
-					</div>
-					<div class="titulo-todos-quizzes">Todos os Quizzes</div>
-					<div class="container-quizzes"></div>
-				</div>
-				>>>>>>> aa0ab83c674abc52a38751612b804e825c9a4633
-
-				<!-- PEDRO -->
-				<div class="pagina-quizz esconder">
-
-				</div>
-
-				<!-- VINI -->
-				<div class="criar-quizz ">
-
-					<div class="info-quizz">
-						<form>
-							<p>Comece pelo começo</p>
-							<div class="form-container">
-								<fieldset>
-									<input id="titulo" name="title" type="text" placeholder="Título do seu quizz">
-									<input name="image" type="url" placeholder="URL da imagem do seu quizz">
-									<input name="quantidadePerguntas" type="number"
-										placeholder="Quantidade de perguntas do quizz">
-									<input name="quantidadeNiveis" type="number"
-										placeholder="Quantidade de níveis do quizz">
-								</fieldset>
-							</div>
-							<input type="submit" value="Prosseguir para criar perguntas">
-						</form>
-					</div>
-
-					<div class="criar-perguntas esconder">
-						<form action="" onsubmit="">
-							<p>Crie suas perguntas</p>
-						</form>
-					</div>
-
-					<div class="criar-niveis esconder">
-						<form action="">
-							<p>Agora, decida os níveis</p>
-
-						</form>
-					</div>
-
-				</div>
-
+					<input type="submit" value="Prosseguir para criar perguntas">
+				</form>
 			</div>
-			<script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
-			<script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
 
-			<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-			<script src="./script/script.js"></script>
+			<div class="criar-perguntas esconder">
+				<form action="" onsubmit="">
+					<p>Crie suas perguntas</p>
+				</form>
+			</div>
+
+			<div class="criar-niveis esconder">
+				<form action="">
+					<p>Agora, decida os níveis</p>
+
+				</form>
+			</div>
+
+		</div>
+
+	</div>
+	<script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+	<script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+
+	<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+	<script src="./script/script.js"></script>
 </body>
 
 </html>
