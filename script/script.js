@@ -230,31 +230,52 @@ function randomizarArray(array) {
 //
 //*/
 
-const infoQuizzForm = document.querySelector(".info-quizz form");
+const infoQuizzForm = document.querySelector(".comeco-quizz form");
 const criarPerguntasForm = document.querySelector(".criar-perguntas form");
 const formDataObj = {};
 
 const objQuizzCompleto = {
 	title: "",
 	image: "",
-	questions: []
+	questions: [],
+	levels: []
 };
 
-infoQuizzForm.addEventListener("submit", (event) => {
-	event.preventDefault();
-	const myFormData = new FormData(event.target);
-	myFormData.forEach((value, key) => (formDataObj[key] = value));
+// infoQuizzForm.addEventListener("submit", (event) => {
+// 	event.preventDefault();
+// 	const myFormData = new FormData(event.target);
+// 	myFormData.forEach((value, key) => (formDataObj[key] = value));
 
-	if (formDataObj.title < 10 || formDataObj.title > 66 || formDataObj.quantidadePerguntas < 2 || formDataObj.quantidadeNiveis < 2) {
+// 	if (formDataObj.title < 10 || formDataObj.title > 66 || formDataObj.quantidadePerguntas < 2 || formDataObj.quantidadeNiveis < 2) {
+// 		alert("Preencha direito!");
+// 		return;
+// 	}
+
+// 	objQuizzCompleto.title = formDataObj.title;
+// 	objQuizzCompleto.image = formDataObj.image;
+
+// 	criarPerguntas();
+// });
+
+function comecarQuizz() {
+
+	const tituloQuizz = infoQuizzForm.querySelector("input[name='tituloQuizz']").value;
+	const imagemQuizz = infoQuizzForm.querySelector("input[name='imagemQuizz']").value;
+
+	if (objQuizzCompleto.title < 10 || objQuizzCompleto.title > 66 || objQuizzCompleto.quantidadePerguntas < 2 || objQuizzCompleto.quantidadeNiveis < 2) {
 		alert("Preencha direito!");
 		return;
 	}
 
-	objQuizzCompleto.title = formDataObj.title;
-	objQuizzCompleto.image = formDataObj.image;
+	objQuizzCompleto.title = tituloQuizz;
+	objQuizzCompleto.image = imagemQuizz;
 
 	criarPerguntas();
-});
+}
+
+function verificaRespostas(element) {
+	console.log(element);
+}
 
 function criarObjQuizz() {
 
@@ -311,7 +332,7 @@ function buscarResposta(fieldset) {
 
 function criarPerguntas() {
 	////		ESCONDER 	, 		MOSTRAR
-	trocarTela(".info-quizz", ".criar-perguntas");
+	// trocarTela(".comeco-quizz", ".criar-perguntas");
 
 	for (let i = 0; i < Number(formDataObj.quantidadePerguntas); i++) {
 		criarPerguntasForm.innerHTML += divPerguntas(i);
@@ -319,13 +340,11 @@ function criarPerguntas() {
 	}
 
 	criarPerguntasForm.innerHTML += `<input type="submit" value="Prosseguir para criar níveis" onclick="criarObjQuizz()">`;
-
-	botoes = [...document.querySelectorAll(".dobravel")];
 }
 
 function criarNiveis() {
 	////		ESCONDER 	, 		MOSTRAR
-	trocarTela(".criar-perguntas", ".criar-niveis");
+	// trocarTela(".criar-perguntas", ".criar-niveis");
 }
 
 function divPerguntas(i) {

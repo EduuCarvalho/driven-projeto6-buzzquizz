@@ -19,7 +19,7 @@
 	<bold class="topo-fixo-buzzquizz">BuzzQuizz</bold>
 
 	<div class="conteudo-pagina">
-		<div class="pagina-inicial">
+		<div class="pagina-inicial esconder">
 			<!-- Edu -->
 			<div class="caixa-criarQuizz">
 				<p>Você não criou nenhum <br>quizz ainda :(</br></p>
@@ -46,20 +46,20 @@
 		<!-- VINI -->
 		<div class="criar-quizz ">
 
-			<div class="info-quizz">
+			<div class="comeco-quizz">
 				<!-- <form action="javascript:;" onsubmit="alert('oi')"> -->
 				<form>
 					<p>Comece pelo começo</p>
 					<div class="form-container">
 						<fieldset>
-							<input id="titulo" name="title" type="text" placeholder="Título do seu quizz">
-							<input name="image" type="url" placeholder="URL da imagem do seu quizz">
+							<input id="titulo" name="tituloQuizz" type="text" placeholder="Título do seu quizz">
+							<input name="imagemQuizz" type="url" placeholder="URL da imagem do seu quizz">
 							<input name="quantidadePerguntas" type="number"
 								placeholder="Quantidade de perguntas do quizz">
 							<input name="quantidadeNiveis" type="number" placeholder="Quantidade de níveis do quizz">
 						</fieldset>
 					</div>
-					<input type="submit" value="Prosseguir para criar perguntas">
+					<input type="submit" value="Prosseguir para criar perguntas" onclick="comecarQuizz()">
 				</form>
 			</div>
 
