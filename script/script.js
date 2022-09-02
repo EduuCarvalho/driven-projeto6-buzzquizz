@@ -1,3 +1,4 @@
+let quizzUsuario = [];
 let quizz = [],
 	quizzEscolhido,
 	pontosObtidos;
@@ -32,6 +33,7 @@ function receberQuizz(resposta) {
 	quizz = resposta.data;
 	// console.log(quizz);
 	renderizarQuizzesProntos();
+	renderizarQuizzesCriados(); //ATENÇÃO, SOMENTE UM TESTE, ESSA FUNÇÃO PUXAR QUIZZ POR ID CRIADO PELO USUARIO
 }
 
 function renderizarQuizzesProntos() {
@@ -44,6 +46,19 @@ function renderizarQuizzesProntos() {
             <p>${quizz[i].title}</p>
         </div>
         `;
+	}
+}
+
+function renderizarQuizzesCriados() {
+	const quizzCriado = document.querySelector(".container-quizzCriado");
+	quizzCriado.innerHTML = "";
+	for (let i = 0; i < 10; i++) {
+		quizzCriado.innerHTML += `
+		<div id="${quizz[i].id}" onclick="extrairQuizzEscolhido(this)" class="selecionar-quizz">
+            <img src="${quizz[i].image}">
+            <p>${quizz[i].title}</p>
+        </div>
+		`;
 	}
 }
 
