@@ -276,7 +276,7 @@ function divPerguntas(i) {
 
 						<div class="opcoes-respostas">
 							<!-- RESPOSTA CORRETA -->
-							<fieldset class="reposta-correta">
+							<fieldset class="resposta-correta">
 								<div class="legend">Resposta correta</div class="legend">
 								<input class="resposta" type="text" placeholder="Resposta correta" minlength="">
 								<input class="imagem" type="url" placeholder="URL da imagem do seu quizz">
