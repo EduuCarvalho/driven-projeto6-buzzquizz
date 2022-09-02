@@ -258,7 +258,7 @@ infoQuizzForm.addEventListener("submit", (event) => {
 
 function criarObjQuizz() {
 
-	//TODAS PERGUNAS 1, PERGUNTA 2, PERGUNTA 3 ...
+	//TODAS PERGUNtA 1, PERGUNTA 2, PERGUNTA 3 ...
 	const perguntas = [...document.querySelectorAll(".criar-perguntas form .form-container")];
 
 	//PERCORRE TODAS AS PERGUNTAS E ADICIONA PROPRIEDADES AO objPerguntas
@@ -283,9 +283,6 @@ function criarObjQuizz() {
 
 		objQuizzCompleto.questions.push(objPerguntas);
 	});
-
-
-	console.log(objQuizzCompleto);
 }
 
 function buscarResposta(fieldset) {
@@ -296,14 +293,14 @@ function buscarResposta(fieldset) {
 	}
 
 	if (fieldset.classList.value === "resposta-correta") {
-		// console.log("resposta correta");
+
 		objResposta.text = fieldset.querySelector("input[name='text']").value;
 		objResposta.image = fieldset.querySelector("input[name='image']").value;
 		objResposta.isCorrectAnswer = true;
 		return objResposta;
 
 	} else if (fieldset.parentNode.classList.value === "respostas-incorretas") {
-		// console.log("resposta incoreta");
+
 		objResposta.text = fieldset.querySelector("input[name='text']").value;
 		objResposta.image = fieldset.querySelector("input[name='image']").value;
 		objResposta.isCorrectAnswer = false;
