@@ -197,65 +197,136 @@ function verificarRespostaCerta(inputEscolhido) {
 const infoQuizzForm = document.querySelector(".info-quizz form");
 const criarPerguntasForm = document.querySelector(".criar-perguntas form");
 const formDataObj = {};
+const objCriarQuizz = {};
+const objCriarPerguntas = {};
+const objCriarNiveis = {};
 
 infoQuizzForm.addEventListener("submit", (event) => {
 	event.preventDefault();
 	const myFormData = new FormData(event.target);
 	myFormData.forEach((value, key) => (formDataObj[key] = value));
 
-	console.log(myFormData);
-
-	if (formDataObj.title < 20 || formDataObj.title > 66 || formDataObj.quantidadePerguntas < 4 || formDataObj.quantidadeNiveis < 3) {
+	if (formDataObj.title < 10 || formDataObj.title > 66 || formDataObj.quantidadePerguntas < 2 || formDataObj.quantidadeNiveis < 2) {
 		alert("Preencha direito!");
 		return;
 	}
 
 	criarPerguntas();
-	console.log(formDataObj);
 });
+
+criarPerguntasForm.addEventListener("submit", (event) => {
+	event.preventDefault();
+	const myFormData = new FormData(event.target);
+	const pergunta = {};
+
+	myFormData.forEach((value, key) => (objCriarPerguntas[key] = value));
+
+	console.log(objCriarPerguntas);
+})
+
+function formParaObj(event) {
+	// form.addEventListener("submit", (event) => {
+	event.preventDefault();
+
+	const myFormData = new FormData(event.target);
+	const formDataObjt = {};
+
+	myFormData.forEach((value, key) => (formDataObjt[key] = value));
+
+	console.log(formDataObjt);
+	return formDataObjt;
+	// })
+}
 
 function criarPerguntas() {
 	////		ESCONDER 	, 		MOSTRAR
-	// trocarTela(infoQuizzForm, criarPerguntasForm);
+	trocarTela(".info-quizz", ".criar-perguntas");
 
 	for (let i = 0; i < Number(formDataObj.quantidadePerguntas); i++) {
+		criarPerguntasForm.innerHTML += divPerguntas(i);
 
-		criarPerguntasForm.innerHTML += `
-				<div class="form-container form-fechado">
-						<fieldset class="">
-							<div class="legend">Pergunta ${i + 1}
-								<ion-icon name="create-outline"></ion-icon>
-							</div class="legend">
-						</fieldset>
-					</div>
-				</form>
-		`;
 	}
 
+	criarPerguntasForm.innerHTML += `<input type="submit" value="Prosseguir para criar níveis">`;
 
+	botoes = [...document.querySelectorAll(".dobravel")];
+}
+
+function criarNiveis() {
+	////		ESCONDER 	, 		MOSTRAR
+	trocarTela(".criar-perguntas", ".criar-niveis");
+}
+
+function divPerguntas(i) {
+	return `
+				<div class="form-container">
+						<div class="dobravel pergunta-numero" onclick="abrirCaixaDobravel(this)">
+						Pergunta ${i + 1}
+							<ion-icon name="create-outline" class="esconder"></ion-icon>
+						</div>
+
+						<div class="conteudo-dobravel">
+
+							<fieldset class="">
+								<input name="${i + 1}tituloPergunta" type="text" placeholder="Texto da pergunta" minlength="20">
+								<input name="${i + 1}corPergunta" type="text" placeholder="Cor de fundo da pergunta">
+							</fieldset>
+
+						<div class="criar-quizz-perguntas">
+							<!-- RESPOSTA CORRETA -->
+							<fieldset class="reposta-correta">
+								<div class="legend">Resposta correta</div class="legend">
+								<input name="${i + 1}respostaCorreta" type="text" placeholder="Resposta correta" minlength="">
+								<input name="${i + 1}imagemCorreta" type="url" placeholder="URL da imagem do seu quizz">
+							</fieldset>
+
+							<!-- RESPOSTAS INCORRETAS -->
+							<fieldset class="respostas-incorretas">
+								<div class="legend">Respostas incorretas</div class="legend">
+								<fieldset>
+									<input name="${i + 1}respostaIncorreta1" type="text" placeholder="Resposta incorreta 1" minlength="">
+									<input name="${i + 1}imagemIncorreta1" type="url" placeholder="URL da imagem do seu quizz">
+								</fieldset>
+
+								<fieldset>
+									<input name="${i + 1}respostaIncorreta2" type="text" placeholder="Resposta incorreta 2" minlength="">
+									<input name="${i + 1}imagemIncorreta2" type="url" placeholder="URL da imagem do seu quizz">
+								</fieldset>
+
+								<fieldset>
+									<input name="${i + 1}respostaIncorreta3" type="text" placeholder="Resposta incorreta 3" minlength="">
+									<input name="${i + 1}imagemIncorreta3" type="url" placeholder="URL da imagem do seu quizz">
+								</fieldset>
+							</fieldset>
+						</div>
+						</div>
+					</div>
+		`
+}
+
+function divNiveis(i) {
+	return `<div class="form-container">
+						<div class="dobravel pergunta-numero" onclick="abrirCaixaDobravel(this)">Nível ${i + 1}
+							<ion-icon name="create-outline" class="esconder"></ion-icon>
+						</div>
+
+						<div class="conteudo-dobravel">
+							<fieldset class="">
+								<input name="" type="text" placeholder="Titulo do nivel" minlength="20">
+								<input name="" type="text" placeholder="% de acerto minimo">
+								<input type="text" placeholder="URL da imagem do nível">
+								<input type="text" placeholder="Descrição do nível">
+							</fieldset>
+						</div>
+					</div>
+					`
 }
 
 function criarQuizz(obj) {
 	const promise = axios.post('https://mock-api.driven.com.br/api/v4/buzzquizz/quizzes', obj);
 }
 
-const botoes = [...document.querySelectorAll(".dobravel")];
-
-botoes.forEach(e => {
-	e.addEventListener("click", () => {
-		e.classList.toggle("ativo");
-		const content = e.nextElementSibling;
-
-		if (content.style.display === "block") {
-			content.style.display = "none";
-		} else {
-			content.style.display = "block";
-		}
-
-		// if (content.style.display === "block") {
-		// 	content.style.display = "none";
-		// } else {
-		// 	content.style.display = "block";
-		// }
-	})
-});
+function abrirCaixaDobravel(e) {
+	const content = e.nextElementSibling;
+	content.classList.toggle("ativo");
+}
