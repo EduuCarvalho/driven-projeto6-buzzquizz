@@ -255,7 +255,7 @@ function criarNiveis() {
 		criarNiveisForm.innerHTML += divNiveis(i);
 	}
 
-	criarNiveisForm.innerHTML += `<div onclick="submeterNiveisQuizz()">Proseguir para </div>`;
+	criarNiveisForm.innerHTML += `<input type="submit" onclick="validarNiveis(this)" value="Proseguir para criação de níveis">`;
 }
 
 function divPerguntas(i) {
@@ -314,7 +314,7 @@ function divNiveis(i) {
 
 						<div class="conteudo-dobravel">
 							<fieldset class="">
-								<input class="titulo-nivel" type="text" placeholder="Titulo do nivel" minlength="20">
+								<input class="titulo-nivel" type="text" placeholder="Titulo do nivel">
 								<input class="acerto-minimo-nivel" type="text" placeholder="% de acerto minimo">
 								<input class="imagem-nivel"type="text" placeholder="URL da imagem do nível">
 								<input class="text-nivel" type="text" placeholder="Descrição do nível">
@@ -362,8 +362,8 @@ function submeterPerguntasQuizz() {
 
 	objetoNovoQuizz["questions"] = listaPerguntas;
 
-	console.log("objetoAposCriarPerguntas" + objetoNovoQuizz);
-	console.log("listaPerguntas" + listaPerguntas);
+	// console.log("objetoAposCriarPerguntas" + objetoNovoQuizz);
+	// console.log("listaPerguntas" + listaPerguntas);
 
 	criarNiveis();
 }
@@ -444,4 +444,78 @@ function criarQuizz(obj) {
 		"https://mock-api.driven.com.br/api/v4/buzzquizz/quizzes",
 		obj
 	);
+}
+
+function validarFormularioNiveis(element) {
+	const form = element.parentNode;
+	const inputs = form.querySelectorAll(".form-container fieldset input");
+	// console.log(inputs);
+	const inputsMinimoNivel = form.querySelectorAll(".form-container fieldset input.acerto-minimo-nivel");
+
+
+	let tudoCerto = true;
+	let umMinimoTemZero = false;
+
+	for (let i = 0; i < inputsMinimoNivel.length; i++) {
+		const input = inputsMinimoNivel[i];
+
+		if (parseInt(input.value) === 0) {
+			umMinimoTemZero = true;
+			break;
+		}
+
+	}
+
+	loopExterno: for (let i = 0; i < inputs.length; i++) {
+		const input = inputs[i];
+		const valorInput = input.value;
+		const classeInput = input.classList.value;
+
+
+		switch (classeInput) {
+			case "titulo-nivel":
+
+				if (typeof valorInput !== "string" || valorInput.length < 10) {
+					console.log("titulo nivel");
+					alert("Titulo do nivel precisa ter pelo menos 10 caracteres");
+					tudoCerto = false;
+					break loopExterno;
+				} else break;
+
+			case "acerto-minimo-nivel":
+
+				if (valorInput == "" || typeof parseInt(valorInput) !== "number" || parseInt(valorInput) < 0 || parseInt(valorInput) > 100) {
+					console.log("acerto minimo nivel");
+					alert("% minimo de acertos dever ser um numero entre 0 e 100");
+					tudoCerto = false;
+					break loopExterno;
+				} else break;
+
+			case "imagem-nivel":
+
+				if (typeof valorInput !== "string"
+					|| !valorInput.toLowerCase().startsWith("https://")) {
+					console.log("imagem nivel");
+					alert("Insira uma URL válida!");
+					tudoCerto = false;
+					break loopExterno;
+				} else break;
+
+			case "text-nivel":
+
+				if (valorInput.length < 30) {
+					console.log("text nivel");
+					alert("A descrição precisa ter pelo menos 30 caracteres");
+					tudoCerto = false;
+					break loopExterno;
+				} else break;
+		}
+
+	}
+
+	console.log(umMinimoTemZero, tudoCerto);
+
+	if (umMinimoTemZero && tudoCerto) {
+		submeterNiveisQuizz();
+	}
 }
