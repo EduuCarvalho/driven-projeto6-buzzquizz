@@ -144,8 +144,9 @@ function construirHTMLQuizzEscolhido(objetoQuizz) {
               src="${objetoOpcao.image}"
 			  onclick="verificarRespostaCerta(this)"
             />
-            <label for='{"pergunta":${i}, "opcao":${j}}'><bold>${objetoOpcao.text
-				}</bold></label>
+            <label for='{"pergunta":${i}, "opcao":${j}}'><bold>${
+				objetoOpcao.text
+			}</bold></label>
           </div>
           `;
 
@@ -239,13 +240,13 @@ function randomizarArray(array) {
 
 function criarPerguntas() {
 	////		ESCONDER 	, 		MOSTRAR
-	trocarTela(".info-quizz", ".criar-perguntas");
+	trocarTela(".comeco-quizz", ".criar-perguntas");
 
 	for (let i = 0; i < Number(qtdPerguntasNovoQuizz); i++) {
 		criarPerguntasForm.innerHTML += divPerguntas(i);
 	}
 
-	criarPerguntasForm.innerHTML += `<div onclick="submeterPerguntasQuizz()">Proseguir para </div>`;
+	criarPerguntasForm.innerHTML += `<div onclick="validarFormularioPerguntas(this)">Proseguir para </div>`;
 }
 
 function criarNiveis() {
@@ -269,34 +270,34 @@ function divPerguntas(i) {
 						<div class="conteudo-dobravel">
 
 							<fieldset class="info-gerais-pergunta">
-								<input class="tituloPergunta" type="text" placeholder="Texto da pergunta" minlength="20">
-								<input class="corPergunta" type="text" placeholder="Cor de fundo da pergunta">
+								<input data-tipo="texto-pergunta" class="tituloPergunta" type="text" placeholder="Texto da pergunta" minlength="20">
+								<input data-tipo="cor" class="corPergunta" type="text" placeholder="Cor de fundo da pergunta">
 							</fieldset>
 
 						<div class="opcoes-respostas">
 							<!-- RESPOSTA CORRETA -->
 							<fieldset class="resposta-correta">
 								<div class="legend">Resposta correta</div class="legend">
-								<input class="resposta" type="text" placeholder="Resposta correta" minlength="">
-								<input class="imagem" type="url" placeholder="URL da imagem do seu quizz">
+								<input data-tipo="texto-opcao" class="resposta resposta-correta" type="text" placeholder="Resposta correta" minlength="">
+								<input data-tipo="URL" class="imagem" type="url" placeholder="URL da imagem do seu quizz">
 							</fieldset>
 
 							<!-- RESPOSTAS INCORRETAS -->
 							<div class="respostas-incorretas">
 								<div class="legend">Respostas incorretas</div class="legend">
 								<fieldset>
-									<input class="resposta" type="text" placeholder="Resposta incorreta 1" minlength="">
-									<input class="imagem" type="url" placeholder="URL da imagem do seu quizz">
+									<input data-tipo="texto-opcao" class="resposta resposta-incorreta" type="text" placeholder="Resposta incorreta 1" minlength="">
+									<input data-tipo="URL" class="imagem" type="url" placeholder="URL da imagem do seu quizz">
 								</fieldset>
 
 								<fieldset>
-									<input class = "resposta" type="text" placeholder="Resposta incorreta 2" minlength="">
-									<input class = "imagem" type="url" placeholder="URL da imagem do seu quizz">
+									<input data-tipo="texto-opcao" class = "resposta resposta-incorreta" type="text" placeholder="Resposta incorreta 2" minlength="">
+									<input data-tipo="URL" class = "imagem" type="url" placeholder="URL da imagem do seu quizz">
 								</fieldset>
 
 								<fieldset>
-									<input class = "resposta" type="text" placeholder="Resposta incorreta 3" minlength="">
-									<input class = "imagem" type="url" placeholder="URL da imagem do seu quizz">
+									<input data-tipo="texto-opcao" class = "resposta resposta-incorreta" type="text" placeholder="Resposta incorreta 3" minlength="">
+									<input data-tipo="URL" class = "imagem" type="url" placeholder="URL da imagem do seu quizz">
 								</fieldset>
 							</div>
 						</div>
@@ -307,8 +308,9 @@ function divPerguntas(i) {
 
 function divNiveis(i) {
 	return `<div class="form-container">
-						<div class="dobravel pergunta-numero" onclick="abrirCaixaDobravel(this)">Nível ${i + 1
-		}
+						<div class="dobravel pergunta-numero" onclick="abrirCaixaDobravel(this)">Nível ${
+							i + 1
+						}
 							<ion-icon name="create-outline" class="esconder"></ion-icon>
 						</div>
 
@@ -444,4 +446,107 @@ function criarQuizz(obj) {
 		"https://mock-api.driven.com.br/api/v4/buzzquizz/quizzes",
 		obj
 	);
+
+	//.then( trocartela, niveis->home
+	//load pegarDados() )
+}
+
+function validarFormularioPerguntas(formulario) {
+	const listaElementosPerguntas =
+		formulario.parentNode.querySelectorAll(".form-container");
+
+	let mensagemAlert = "";
+
+	for (let i = 0; i < listaElementosPerguntas.length; i++) {
+		mensagemAlert = validarPergunta(listaElementosPerguntas[i]);
+
+		if (mensagemAlert !== "") {
+			break;
+		}
+	}
+
+	if (mensagemAlert === "") {
+		submeterPerguntasQuizz();
+	} else alert(mensagemAlert);
+}
+
+function validarPergunta(elementoPergunta) {
+	console.log(elementoPergunta);
+	let submeteuIncorreta = false;
+	let submeteuCorreta = false;
+
+	const listaRespostas = elementoPergunta.querySelectorAll(".resposta");
+
+	const inputs = elementoPergunta.querySelectorAll("input");
+
+	for (let i = 0; i < inputs.length; i++) {
+		const valorInput = inputs[i].value;
+		let tipoInput = inputs[i].dataset.tipo;
+
+		switch (tipoInput) {
+			case "texto-pergunta":
+				if (valorInput.length < 20) {
+					return "Texto da pergunta inválido!";
+				} else break;
+
+			case "cor":
+				const letras = ["a", "b", "c", "d", "e", "f"];
+				const ehCor =
+					typeof valorInput === "string" &&
+					valorInput.length === 7 &&
+					valorInput[0] === "#" &&
+					letras.includes(valorInput[1].toLowerCase()) &&
+					letras.includes(valorInput[2].toLowerCase()) &&
+					letras.includes(valorInput[3].toLowerCase()) &&
+					letras.includes(valorInput[4].toLowerCase()) &&
+					letras.includes(valorInput[5].toLowerCase()) &&
+					letras.includes(valorInput[6].toLowerCase());
+
+				if (!ehCor) {
+					return "Codigo de cor invalido!";
+				} else break;
+
+			case "texto-opcao":
+				break;
+
+			case "URL":
+				break;
+		}
+	}
+
+	let incorretasVazias = 0;
+	const indicesRespostasPreenchidos = [];
+
+	for (let i = 0; i < listaRespostas.length; i++) {
+		if (i === 0) {
+			if (listaRespostas[i].value === "") {
+				return "Opcao correta deve ser preenchida";
+			} else {
+				indicesRespostasPreenchidos.push(i);
+			}
+		}
+
+		if (listaRespostas[i].value === "") {
+			incorretasVazias += 1;
+		} else {
+			indicesRespostasPreenchidos.push(i);
+		}
+	}
+
+	if (incorretasVazias === 3) {
+		return "A pergunta deve conter pelo menos duas opcoes";
+	}
+
+	for (let i = 0; i < indicesRespostasPreenchidos.length; i++) {
+		inputResposta = listaRespostas[indicesRespostasPreenchidos[i]];
+
+		if (
+			!inputResposta.nextElementSibling.value
+				.toLowerCase()
+				.startsWith("https://")
+		)
+			return `Opcao invalida`;
+	}
+
+	return "";
 }
