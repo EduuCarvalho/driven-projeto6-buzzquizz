@@ -256,7 +256,7 @@ function criarNiveis() {
 		criarNiveisForm.innerHTML += divNiveis(i);
 	}
 
-	criarNiveisForm.innerHTML += `<input type="submit" onclick="validarNiveis(this)" value="Proseguir para criação de níveis">`;
+	criarNiveisForm.innerHTML += `<input type="button" onclick="validarFormularioNiveis(this)" value="Proseguir para criação de níveis">`;
 }
 
 function divPerguntas(i) {
@@ -393,11 +393,16 @@ function resgatarRespostas(perguntaAtual) {
 			valorInputResposta.value = "";
 			valorInputImagem.value = "";
 		} else {
-			listaRespostas.push({
-				text: valorInputResposta.value,
-				image: valorInputImagem.value,
-				isCorrectAnswer: false,
-			});
+			if (
+				valorInputResposta.value != "" &&
+				valorInputImagem.value != ""
+			) {
+				listaRespostas.push({
+					text: valorInputResposta.value,
+					image: valorInputImagem.value,
+					isCorrectAnswer: false,
+				});
+			}
 
 			valorInputResposta.value = "";
 			valorInputImagem.value = "";
@@ -436,8 +441,6 @@ function submeterNiveisQuizz() {
 	}
 
 	objetoNovoQuizz["levels"] = listaNiveis;
-
-	trocarTela(".criar-niveis", ".info-quizz");
 	console.log(objetoNovoQuizz);
 }
 
@@ -472,8 +475,6 @@ function validarFormularioPerguntas(formulario) {
 
 function validarPergunta(elementoPergunta) {
 	console.log(elementoPergunta);
-	let submeteuIncorreta = false;
-	let submeteuCorreta = false;
 
 	const listaRespostas = elementoPergunta.querySelectorAll(".resposta");
 
@@ -515,39 +516,51 @@ function validarPergunta(elementoPergunta) {
 	}
 
 	let incorretasVazias = 0;
-	const indicesRespostasPreenchidos = [];
+
+	const indicesIncorretasPreenchidas = [];
 
 	for (let i = 0; i < listaRespostas.length; i++) {
 		if (i === 0) {
-			if (listaRespostas[i].value === "") {
-				return "Opcao correta deve ser preenchida";
-			} else {
-				indicesRespostasPreenchidos.push(i);
+			if (
+				listaRespostas[i].value === "" ||
+				!listaRespostas[i].nextElementSibling.value
+					.toLowerCase()
+					.startsWith("https://")
+			) {
+				return "Opcao correta inválida. Preencha os dados corretamente.";
 			}
 		}
 
-		if (listaRespostas[i].value === "") {
+		// So passa adiante quando há uma opçao correta válida.
+
+		if (
+			listaRespostas[i].value === "" &&
+			listaRespostas[i].nextElementSibling.value === ""
+		)
 			incorretasVazias += 1;
-		} else {
-			indicesRespostasPreenchidos.push(i);
-		}
+		else indicesIncorretasPreenchidas.push(i);
 	}
 
 	if (incorretasVazias === 3) {
-		return "A pergunta deve conter pelo menos duas opcoes";
+		return "A pergunta deve conter pelo menos uma opcao incorreta";
 	}
+	// So passa adiante quando há pelo menos uma opçao incorreta válida.
 
-	for (let i = 0; i < indicesRespostasPreenchidos.length; i++) {
-		inputResposta = listaRespostas[indicesRespostasPreenchidos[i]];
+	for (let i = 0; i < indicesIncorretasPreenchidas.length; i++) {
+		inputResposta = listaRespostas[indicesIncorretasPreenchidas[i]];
 
 		if (
+			listaRespostas[i].value === "" ||
 			!inputResposta.nextElementSibling.value
 				.toLowerCase()
 				.startsWith("https://")
 		)
-			return `Opcao invalida`;
+			return `Erro de validação, preencha os campos de opcao incorreta corretamente`;
 	}
 
+	// So passa adiante quando todos pares de resposta incorreta são preenchidos corretamente;
+
+	// Formulario validado
 	return "";
 }
 
@@ -555,8 +568,9 @@ function validarFormularioNiveis(element) {
 	const form = element.parentNode;
 	const inputs = form.querySelectorAll(".form-container fieldset input");
 	// console.log(inputs);
-	const inputsMinimoNivel = form.querySelectorAll(".form-container fieldset input.acerto-minimo-nivel");
-
+	const inputsMinimoNivel = form.querySelectorAll(
+		".form-container fieldset input.acerto-minimo-nivel"
+	);
 
 	let tudoCerto = true;
 	let umMinimoTemZero = false;
@@ -567,8 +581,10 @@ function validarFormularioNiveis(element) {
 		if (parseInt(input.value) === 0) {
 			umMinimoTemZero = true;
 			break;
+		} else {
+			alert("Uma das opcoes deve ter 0% de acerto.");
+			break;
 		}
-
 	}
 
 	loopExterno: for (let i = 0; i < inputs.length; i++) {
@@ -576,30 +592,37 @@ function validarFormularioNiveis(element) {
 		const valorInput = input.value;
 		const classeInput = input.classList.value;
 
-
 		switch (classeInput) {
 			case "titulo-nivel":
-
 				if (typeof valorInput !== "string" || valorInput.length < 10) {
 					console.log("titulo nivel");
-					alert("Titulo do nivel precisa ter pelo menos 10 caracteres");
+					alert(
+						"Titulo do nivel precisa ter pelo menos 10 caracteres"
+					);
 					tudoCerto = false;
 					break loopExterno;
 				} else break;
 
 			case "acerto-minimo-nivel":
-
-				if (valorInput == "" || typeof parseInt(valorInput) !== "number" || parseInt(valorInput) < 0 || parseInt(valorInput) > 100) {
+				if (
+					valorInput == "" ||
+					typeof parseInt(valorInput) !== "number" ||
+					parseInt(valorInput) < 0 ||
+					parseInt(valorInput) > 100
+				) {
 					console.log("acerto minimo nivel");
-					alert("% minimo de acertos dever ser um numero entre 0 e 100");
+					alert(
+						"% minimo de acertos dever ser um numero entre 0 e 100"
+					);
 					tudoCerto = false;
 					break loopExterno;
 				} else break;
 
 			case "imagem-nivel":
-
-				if (typeof valorInput !== "string"
-					|| !valorInput.toLowerCase().startsWith("https://")) {
+				if (
+					typeof valorInput !== "string" ||
+					!valorInput.toLowerCase().startsWith("https://")
+				) {
 					console.log("imagem nivel");
 					alert("Insira uma URL válida!");
 					tudoCerto = false;
@@ -607,7 +630,6 @@ function validarFormularioNiveis(element) {
 				} else break;
 
 			case "text-nivel":
-
 				if (valorInput.length < 30) {
 					console.log("text nivel");
 					alert("A descrição precisa ter pelo menos 30 caracteres");
@@ -615,7 +637,6 @@ function validarFormularioNiveis(element) {
 					break loopExterno;
 				} else break;
 		}
-
 	}
 
 	console.log(umMinimoTemZero, tudoCerto);
