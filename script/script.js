@@ -452,10 +452,11 @@ function validarFormularioNiveis(element) {
 	// console.log(inputs);
 	const inputsMinimoNivel = form.querySelectorAll(".form-container fieldset input.acerto-minimo-nivel");
 
-
 	let tudoCerto = true;
 	let umMinimoTemZero = false;
 
+	//verifica se pelo menos um input 
+	//de % de acerto minimo tem o valor zero
 	for (let i = 0; i < inputsMinimoNivel.length; i++) {
 		const input = inputsMinimoNivel[i];
 
@@ -466,6 +467,9 @@ function validarFormularioNiveis(element) {
 
 	}
 
+	//faz todas as validaçoes
+	//o label loopExterno é usado para dar um break e nao continuar
+	//rodando quando uma condiçao for true
 	loopExterno: for (let i = 0; i < inputs.length; i++) {
 		const input = inputs[i];
 		const valorInput = input.value;
@@ -518,4 +522,25 @@ function validarFormularioNiveis(element) {
 	if (umMinimoTemZero && tudoCerto) {
 		submeterNiveisQuizz();
 	}
+}
+
+function renderizarQuizzCriado(objQuizzCriado) {
+	const telaQuizzPronto = document.querySelector(".quizz-pronto");
+
+	const conteudo = `<p>Seu quizz esta pronto!</p>
+				<div id="${objQuizzCriado.id}" onclick="" class="selecionar-quizz" style="width: 500px; height: 266px;">
+					<img src="${objQuizzCriado.image}">
+					<p>${objQuizzCriado.title}</p>
+				</div>
+
+				<input type="submit" value="Acessar Quizz" oonclick="extrairQuizzEscolhido(this)">
+				<p class="voltar-home" onclick="voltarHome(this)">Voltar para home</p>`;
+
+	telaQuizzPronto.innerHTML = conteudo;
+}
+
+function voltarHome(e) {
+	const telaAtual = e.parentNode.parentNode.classList.value;
+	console.log(telaAtual)
+	trocarTela(`.${telaAtual}`, `.pagina-inicial`);
 }
