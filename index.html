@@ -19,7 +19,7 @@
 	<bold class="topo-fixo-buzzquizz">BuzzQuizz</bold>
 
 	<div class="conteudo-pagina">
-		<div class="pagina-inicial esconder">
+		<div class="pagina-inicial">
 			<!-- Edu -->
 			<div class="caixa-criarQuizz">
 				<p>Você não criou nenhum <br>quizz ainda :(</br></p>
@@ -28,7 +28,8 @@
 			<div class="caixa-quizzCriado">
 				<div class="tituloBotao-quizzCriado">
 					<div class="titulo-quizz-criado">Seus Quizzes</div>
-					<ion-icon class="botaoAddQuizz" name="add-circle"></ion-icon>
+					<ion-icon onclick="trocarTela('.pagina-inicial', '.criar-quizz')" class="botaoAddQuizz"
+						name="add-circle"></ion-icon>
 				</div>
 				<div class="container-quizzCriado"></div>
 			</div>
@@ -44,7 +45,7 @@
 		</div>
 
 		<!-- VINI -->
-		<div class="criar-quizz">
+		<div class="criar-quizz esconder">
 
 			<div class="comeco-quizz">
 				<!-- <form action="javascript:;" onsubmit="alert('oi')"> -->

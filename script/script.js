@@ -7,9 +7,8 @@ let quizzUsuario = [],
 	objetoNovoQuizz = {};
 
 const criarPerguntasForm = document.querySelector(".criar-perguntas form");
-// console.log(criarPerguntasForm);
+
 const criarNiveisForm = document.querySelector(".criar-niveis form");
-//console.log(criarNiveisForm);
 
 pegarDados();
 
@@ -17,12 +16,6 @@ function trocarTela(esconder, mostrar) {
 	document.querySelector(esconder).classList.add("esconder");
 	document.querySelector(mostrar).classList.remove("esconder");
 }
-
-//**EDU
-//
-//
-//
-//*/
 
 function pegarDados() {
 	const promessa = axios.get(
@@ -39,7 +32,9 @@ function receberFalhou(erro) {
 function receberQuizz(resposta) {
 	// console.log(resposta);
 	quizz = resposta.data;
+	console.log(quizz);
 	// console.log(quizz);
+
 	renderizarQuizzesProntos();
 	renderizarQuizzesCriados(); //ATENÇÃO, SOMENTE UM TESTE, ESSA FUNÇÃO PUXAR QUIZZ POR ID CRIADO PELO USUARIO
 }
@@ -70,15 +65,8 @@ function renderizarQuizzesCriados() {
 	}
 }
 
-//**PEDRO
-//
-//
-//
-//*/
-
 function extrairQuizzEscolhido(objetoSelecionarQuizz) {
-	const idQuizz = 10080;
-	//const idQuizz = objetoSelecionarQuizz.id;
+	const idQuizz = objetoSelecionarQuizz.id;
 
 	const promessa = axios.get(
 		`https://mock-api.driven.com.br/api/v4/buzzquizz/quizzes/${idQuizz}`
@@ -91,7 +79,7 @@ function extrairQuizzEscolhido(objetoSelecionarQuizz) {
 function construirHTMLQuizzEscolhido(objetoQuizz) {
 	console.log(objetoQuizz);
 	quizzEscolhido = objetoQuizz;
-	objetoQuizzData = quizzEscolhido.data;
+	const objetoQuizzData = quizzEscolhido.data;
 
 	const tituloQuizz = objetoQuizzData.title;
 	const listaPerguntasQuizz = objetoQuizzData.questions;
@@ -232,12 +220,6 @@ function randomizarArray(array) {
 	return array;
 }
 
-//**VINI
-//
-//
-//
-//*/
-
 function criarPerguntas() {
 	////		ESCONDER 	, 		MOSTRAR
 	trocarTela(".comeco-quizz", ".criar-perguntas");
@@ -332,6 +314,9 @@ function abrirCaixaDobravel(e) {
 }
 
 function submeterDadosQuizz() {
+	// Zerar objeto novo quizz
+	objetoNovoQuizz = {};
+
 	objetoNovoQuizz["title"] = document.getElementById("titulo").value;
 	objetoNovoQuizz["image"] = document.getElementById("imagem-quizz").value;
 
@@ -442,16 +427,20 @@ function submeterNiveisQuizz() {
 
 	objetoNovoQuizz["levels"] = listaNiveis;
 	console.log(objetoNovoQuizz);
+	criarQuizz(objetoNovoQuizz);
 }
 
-function criarQuizz(obj) {
+function criarQuizz() {
 	const promise = axios.post(
 		"https://mock-api.driven.com.br/api/v4/buzzquizz/quizzes",
-		obj
+		objetoNovoQuizz
 	);
 
-	//.then( trocartela, niveis->home
-	//load pegarDados() )
+	promise.then((response) => {
+		const idQuizzCriado = response.data.id;
+		// => Salvar 'idQuizzCriado' no localStorage <== //
+		console.log(idQuizzCriado);
+	});
 }
 
 function validarFormularioPerguntas(formulario) {
