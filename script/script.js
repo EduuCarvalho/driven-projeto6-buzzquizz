@@ -5,6 +5,7 @@ let quizzEscolhido,
 	qtdNiveisNovoQuizz,
 	todosQuizzesAPI = [],
 	objetoNovoQuizz = {};
+//idQuizzCriado;
 
 receberDadosAPI();
 
@@ -701,13 +702,32 @@ function criarQuizz() {
 	);
 
 	promise.then((response) => {
-		const idQuizzCriado = response.data.id;
+		let objQuizzCriado = response.data;
+		renderizarQuizzCriado(objQuizzCriado);
+
 		// => Salvar 'idQuizzCriado' no localStorage <== //
-		console.log(idQuizzCriado);
 	});
+}
+let storageID = localStorage.getItem("guardarID");
+
+storageID = JSON.parse(storageID);
+let IDsCriadosPeloUsuario;
+if (storageID == null) {
+	IDsCriadosPeloUsuario = [];
+} else {
+	IDsCriadosPeloUsuario = storageID;
+}
+console.log("IDS", IDsCriadosPeloUsuario);
+
+function armazenarLocalStorage(idQuizzCriado) {
+	IDsCriadosPeloUsuario.push(idQuizzCriado);
+	let stringIDUsuario = JSON.stringify(IDsCriadosPeloUsuario);
+	localStorage.setItem("guardarID", stringIDUsuario);
 }
 
 function renderizarQuizzCriado(objQuizzCriado) {
+	let esconderNiveis = document.querySelector(".criar-niveis form");
+	esconderNiveis.classList.add("esconder");
 	const telaQuizzPronto = document.querySelector(".quizz-pronto");
 
 	const conteudo = `<p>Seu quizz esta pronto!</p>
@@ -720,6 +740,8 @@ function renderizarQuizzCriado(objQuizzCriado) {
 				<p class="voltar-home" onclick="voltarHome(this)">Voltar para home</p>`;
 
 	telaQuizzPronto.innerHTML = conteudo;
+
+	armazenarLocalStorage(objQuizzCriado.id);
 }
 
 // Funções acessórias
