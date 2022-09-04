@@ -35,7 +35,7 @@ function renderizarQuizzesGerais() {
 	quizzesProntos.innerHTML = "";
 	for (let i = 0; i < todosQuizzesAPI.length; i++) {
 		quizzesProntos.innerHTML += `
-        <div id="${todosQuizzesAPI[i].id}" onclick="extrairQuizzEscolhido(this)" class="selecionar-quizz">
+        <div data-id="${todosQuizzesAPI[i].id}" onclick="extrairQuizzEscolhido(this)" class="selecionar-quizz">
             <img src="${todosQuizzesAPI[i].image}">
             <p>${todosQuizzesAPI[i].title}</p>
         </div>
@@ -48,7 +48,7 @@ function renderizarQuizzesProprios() {
 	quizzCriado.innerHTML = "";
 	for (let i = 0; i < 10; i++) {
 		quizzCriado.innerHTML += `
-		<div id="${todosQuizzesAPI[i].id}" onclick="extrairQuizzEscolhido(this)" class="selecionar-quizz">
+		<div data-id="${todosQuizzesAPI[i].id}" onclick="extrairQuizzEscolhido(this)" class="selecionar-quizz">
             <img src="${todosQuizzesAPI[i].image}">
             <p>${todosQuizzesAPI[i].title}</p>
         </div>
@@ -58,7 +58,9 @@ function renderizarQuizzesProprios() {
 
 // Funções para renderizar e executar a aplicação do quizz
 function extrairQuizzEscolhido(objetoSelecionarQuizz) {
-	const idQuizz = objetoSelecionarQuizz.id;
+	console.log(objetoSelecionarQuizz);
+	console.log(objetoSelecionarQuizz.dataset.id);
+	const idQuizz = objetoSelecionarQuizz.dataset.id;
 
 	const promessa = axios.get(
 		`https://mock-api.driven.com.br/api/v4/buzzquizz/quizzes/${idQuizz}`
@@ -151,7 +153,7 @@ function construirHTMLQuizzEscolhido(objetoQuizz) {
 
 	document.querySelector(".pagina-quizz").innerHTML = paginaQuizzHTML;
 
-	trocarTela(".pagina-inicial", ".pagina-quizz");
+	trocarTela(`.${retornarTelaAtual()}`, ".pagina-quizz");
 	pontosObtidos = 0;
 	respostasVerificadas = 0;
 }
@@ -269,7 +271,7 @@ function renderizarTelaResultadoQuizz(porcentagemAlcancada) {
 						<div class="texto-quizz-finalizado">${textoTelaResultado}</div>
 					</div>
 				</div>
-					<input type="submit" value="Reiniciar quizz" oonclick="extrairQuizzEscolhido(this)">
+					<input data-id="${quizzEscolhido.data.id}" type="submit" value="Reiniciar quizz" onclick="extrairQuizzEscolhido(this)">
 					<p class="voltar-home" onclick="voltarHome(this)">Voltar para home</p>
 				</div>
 	`;
@@ -279,6 +281,8 @@ function renderizarTelaResultadoQuizz(porcentagemAlcancada) {
 
 	trocarTela(".pagina-quizz", ".finalizar-quizz");
 }
+
+function reiniciarQuizz() {}
 
 // Funções para renderizar telas de criação do novo quizz
 function criarFormularioPerguntas() {
@@ -495,30 +499,34 @@ function validarFormularioNiveis(element) {
 	const form = element.parentNode;
 	const inputs = form.querySelectorAll(".form-container fieldset input");
 	// console.log(inputs);
-	const inputsMinimoNivel = form.querySelectorAll(
-		".form-container fieldset input.acerto-minimo-nivel"
-	);
+	const inputsMinimoNivel = form.querySelectorAll(".acerto-minimo-nivel");
 
 	let tudoCerto = true;
 	let umMinimoTemZero = false;
+
+	console.log(inputsMinimoNivel);
 
 	//verifica se pelo menos um input
 	//de % de acerto minimo tem o valor zero
 	for (let i = 0; i < inputsMinimoNivel.length; i++) {
 		const input = inputsMinimoNivel[i];
+		console.log(parseInt(input.value));
 
 		if (parseInt(input.value) === 0) {
 			umMinimoTemZero = true;
 			break;
-		} else {
-			alert("Uma das opcoes deve ter 0% de acerto.");
-			break;
 		}
+	}
+
+	if (umMinimoTemZero == false) {
+		alert("Uma das opcoes deve ter 0% de acerto.");
+		return;
 	}
 
 	//faz todas as validaçoes
 	//o label loopExterno é usado para dar um break e nao continuar
 	//rodando quando uma condiçao for true
+
 	loopExterno: for (let i = 0; i < inputs.length; i++) {
 		const input = inputs[i];
 		const valorInput = input.value;
@@ -706,6 +714,12 @@ function criarQuizz() {
 		renderizarQuizzCriado(objQuizzCriado);
 
 		// => Salvar 'idQuizzCriado' no localStorage <== //
+<<<<<<< HEAD
+=======
+		console.log(idQuizzCriado);
+
+		renderizarQuizzCriado(response);
+>>>>>>> 565cf028c9f2a834058b25a9f32d35653ca9aa73
 	});
 }
 let storageID = localStorage.getItem("guardarID");
@@ -736,12 +750,16 @@ function renderizarQuizzCriado(objQuizzCriado) {
 					<p>${objQuizzCriado.title}</p>
 				</div>
 
-				<input type="submit" value="Acessar Quizz" oonclick="extrairQuizzEscolhido(this)">
+				<input type="submit" data-id="${objQuizzCriado.data.id}" value="Acessar Quizz" onclick="extrairQuizzEscolhido(this)">
 				<p class="voltar-home" onclick="voltarHome(this)">Voltar para home</p>`;
 
 	telaQuizzPronto.innerHTML = conteudo;
 
+<<<<<<< HEAD
 	armazenarLocalStorage(objQuizzCriado.id);
+=======
+	trocarTela(".criar-niveis", ".quizz-pronto");
+>>>>>>> 565cf028c9f2a834058b25a9f32d35653ca9aa73
 }
 
 // Funções acessórias
@@ -750,6 +768,24 @@ function voltarHome(e) {
 	const telaAtual = e.parentNode.parentNode.classList.value;
 	console.log(telaAtual);
 	trocarTela(`.${telaAtual}`, `.pagina-inicial`);
+}
+
+function retornarTelaAtual() {
+	const listaTelas = document.querySelectorAll(".conteudo-pagina > div");
+
+	console.log(listaTelas);
+
+	let telaAtual;
+	for (let i = 0; i < listaTelas.length; i++) {
+		console.log(!listaTelas[i].classList.contains("esconder"));
+		verify = listaTelas[i].classList.contains("esconder");
+		if (!verify) {
+			telaAtual = listaTelas[i];
+		}
+	}
+
+	console.log(telaAtual.classList.value);
+	return telaAtual.classList.value;
 }
 
 function trocarTela(esconder, mostrar) {
