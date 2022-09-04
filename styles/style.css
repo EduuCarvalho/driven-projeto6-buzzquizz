@@ -35,7 +35,7 @@ bold {
 
 /* Estilo conteudo pagina padrão */
 .conteudo-pagina {
-	background-color: #fafafa;
+	background-color: #e5e5e5;
 	width: 100vw;
 	min-height: 100vh;
 	display: flex;
@@ -418,7 +418,8 @@ fieldset .legend,
 .caixa-padrao {
 	width: 760px;
 	height: 520px;
-	background-color: #ff0404;
+
+	background-color: #fafafa;
 
 	display: flex;
 	flex-direction: column;
@@ -429,7 +430,6 @@ fieldset .legend,
 .conteudo-caixa-padrao {
 	width: 95%;
 	height: 95%;
-	background-color: blue;
 
 	display: flex;
 	flex-direction: column;
@@ -439,7 +439,7 @@ fieldset .legend,
 .titulo-quizz-finalizado {
 	width: 100%;
 	height: 100px;
-	background-color: #cafa;
+	background-color: #ec362d;
 
 	font-size: 23px;
 	font-weight: 700;
@@ -468,6 +468,7 @@ fieldset .legend,
 .texto-quizz-finalizado {
 	font-weight: 700;
 	line-height: 25px;
+	word-break: break-all;
 
 	height: 100%;
 

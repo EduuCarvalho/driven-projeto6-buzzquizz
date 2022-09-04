@@ -241,9 +241,42 @@ function resultadoQuizz() {
 }
 
 function renderizarTelaResultadoQuizz(porcentagemAlcancada) {
-	alert(
-		`Sua colocacao foi: ${porcentagemAlcancada}. (posteriormente teremos a tela mostrando a sua colocaçao).`
-	);
+	const listaLevelsQuizz = quizzEscolhido.data.levels;
+	let tituloTelaResultado, textoTelaResultado, imageTelaResultado;
+
+	for (let i = 0; i < listaLevelsQuizz.length; i++) {
+		console.log(listaLevelsQuizz[i].minValue);
+		console.log(porcentagemAlcancada);
+		if (listaLevelsQuizz[i].minValue == porcentagemAlcancada) {
+			tituloTelaResultado = listaLevelsQuizz[i].title;
+			textoTelaResultado = listaLevelsQuizz[i].text;
+			imageTelaResultado = listaLevelsQuizz[i].image;
+			break;
+		}
+	}
+
+	const telaFinalizaQuizzHTML = `
+	<div class="caixa-padrao">
+				<div class="conteudo-caixa-padrao">
+					<div class="titulo-quizz-finalizado">
+						${porcentagemAlcancada}% de acerto: ${tituloTelaResultado}
+					</div>
+					<div class="conteudo-quizz-finalizado">
+						<img
+							src="${imageTelaResultado}">
+
+						<div class="texto-quizz-finalizado">${textoTelaResultado}</div>
+					</div>
+				</div>
+					<input type="submit" value="Reiniciar quizz" oonclick="extrairQuizzEscolhido(this)">
+					<p class="voltar-home" onclick="voltarHome(this)">Voltar para home</p>
+				</div>
+	`;
+
+	document.querySelector(".finalizar-quizz").innerHTML =
+		telaFinalizaQuizzHTML;
+
+	trocarTela(".pagina-quizz", ".finalizar-quizz");
 }
 
 // Funções para renderizar telas de criação do novo quizz
