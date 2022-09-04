@@ -35,8 +35,9 @@ bold {
 
 /* Estilo conteudo pagina padrão */
 .conteudo-pagina {
-	background-color: #fafafa;
+	background-color: #e5e5e5;
 	width: 100vw;
+	min-height: 100vh;
 	display: flex;
 	justify-content: center;
 }
@@ -143,9 +144,11 @@ bold {
 }
 
 .selecionar-quizz img {
-	width: 340px;
-	height: 181px;
+	width: 100%;
+	height: 100%;
 	border-radius: 5px;
+
+	object-fit: cover;
 }
 
 .selecionar-quizz p {
@@ -271,19 +274,12 @@ bold {
 	filter: opacity(40%);
 }
 
-/* ESCONDER DISPLAY */
-.esconder {
-	display: none;
-}
-
 /* VINI */
 
 .criar-quizz {
 	padding-bottom: 50px;
-}
-
-.criar-quizz {
 	margin: 70px auto 0;
+	width: 600px;
 }
 
 form {
@@ -292,10 +288,10 @@ form {
 	align-items: center;
 	gap: 24px;
 
-	width: 600px;
 	margin: 27px 0 85px;
 }
 
+.criar-quizz > div > p,
 form p {
 	font-weight: 700;
 	font-size: 23px;
@@ -360,7 +356,7 @@ fieldset .legend,
 }
 
 .criar-quizz input {
-	width: 100%;
+	/* width: 100%; */
 	height: 46px;
 
 	font-size: 19px;
@@ -379,14 +375,107 @@ fieldset .legend,
 	color: #bababa;
 }
 
-.criar-quizz form input[type="submit"] {
+.criar-quizz input[type="submit"] {
 	height: 54px;
-	width: 370px;
+	/* width: 370px; */
 
 	background: #ec362d;
 	color: #fff;
 
 	border-radius: 15px;
 
-	margin-top: 85px;
+	margin: 85px auto 20px;
+	padding: 0 50px;
+}
+
+.criar-quizz .quizz-pronto {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+.criar-quizz .voltar-home {
+	font-weight: 400;
+	font-size: 21px;
+
+	color: #818181;
+
+	display: flex;
+}
+
+.criar-quizz .selecionar-quizz {
+	margin: 0;
+}
+
+/* Tela finalizar quizz */
+
+.finalizar-quizz {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.caixa-padrao {
+	width: 760px;
+	height: 520px;
+
+	background-color: #fafafa;
+
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+}
+
+.conteudo-caixa-padrao {
+	width: 95%;
+	height: 95%;
+
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.titulo-quizz-finalizado {
+	width: 100%;
+	height: 100px;
+	background-color: #ec362d;
+
+	font-size: 23px;
+	font-weight: 700;
+	color: #fafafa;
+
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.conteudo-quizz-finalizado {
+	display: flex;
+	width: 100%;
+	height: 75%;
+	justify-content: space-between;
+}
+
+.conteudo-quizz-finalizado > * {
+	width: 48%;
+}
+
+.conteudo-quizz-finalizado img {
+	height: 100%;
+}
+
+.texto-quizz-finalizado {
+	font-weight: 700;
+	line-height: 25px;
+	word-break: break-all;
+
+	height: 100%;
+
+	overflow-y: scroll;
+}
+
+/* ESCONDER DISPLAY */
+.esconder {
+	display: none;
 }

@@ -1,30 +1,15 @@
-let quizzUsuario = [],
-	quizz = [],
-	quizzEscolhido,
+let quizzEscolhido,
 	pontosObtidos,
+	respostasVerificadas,
 	qtdPerguntasNovoQuizz,
 	qtdNiveisNovoQuizz,
+	todosQuizzesAPI = [],
 	objetoNovoQuizz = {};
 
-const criarPerguntasForm = document.querySelector(".criar-perguntas form");
-// console.log(criarPerguntasForm);
-const criarNiveisForm = document.querySelector(".criar-niveis form");
-//console.log(criarNiveisForm);
+receberDadosAPI();
 
-pegarDados();
-
-function trocarTela(esconder, mostrar) {
-	document.querySelector(esconder).classList.add("esconder");
-	document.querySelector(mostrar).classList.remove("esconder");
-}
-
-//**EDU
-//
-//
-//
-//*/
-
-function pegarDados() {
+// Funções para carregar e renderizar dados da API
+function receberDadosAPI() {
 	const promessa = axios.get(
 		"https://mock-api.driven.com.br/api/v4/buzzquizz/quizzes"
 	);
@@ -37,48 +22,42 @@ function receberFalhou(erro) {
 }
 
 function receberQuizz(resposta) {
-	// console.log(resposta);
-	quizz = resposta.data;
-	// console.log(quizz);
-	renderizarQuizzesProntos();
-	renderizarQuizzesCriados(); //ATENÇÃO, SOMENTE UM TESTE, ESSA FUNÇÃO PUXAR QUIZZ POR ID CRIADO PELO USUARIO
+	todosQuizzesAPI = resposta.data;
+	console.log(todosQuizzesAPI);
+
+	renderizarQuizzesGerais();
+	renderizarQuizzesProprios(); //ATENÇÃO, SOMENTE UM TESTE, ESSA FUNÇÃO PUXAR QUIZZ POR ID CRIADO PELO USUARIO
 }
 
-function renderizarQuizzesProntos() {
+function renderizarQuizzesGerais() {
 	const quizzesProntos = document.querySelector(".container-quizzes");
 	quizzesProntos.innerHTML = "";
-	for (let i = 0; i < quizz.length; i++) {
+	for (let i = 0; i < todosQuizzesAPI.length; i++) {
 		quizzesProntos.innerHTML += `
-        <div id="${quizz[i].id}" onclick="extrairQuizzEscolhido(this)" class="selecionar-quizz">
-            <img src="${quizz[i].image}">
-            <p>${quizz[i].title}</p>
+        <div id="${todosQuizzesAPI[i].id}" onclick="extrairQuizzEscolhido(this)" class="selecionar-quizz">
+            <img src="${todosQuizzesAPI[i].image}">
+            <p>${todosQuizzesAPI[i].title}</p>
         </div>
         `;
 	}
 }
 
-function renderizarQuizzesCriados() {
+function renderizarQuizzesProprios() {
 	const quizzCriado = document.querySelector(".container-quizzCriado");
 	quizzCriado.innerHTML = "";
 	for (let i = 0; i < 10; i++) {
 		quizzCriado.innerHTML += `
-		<div id="${quizz[i].id}" onclick="extrairQuizzEscolhido(this)" class="selecionar-quizz">
-            <img src="${quizz[i].image}">
-            <p>${quizz[i].title}</p>
+		<div id="${todosQuizzesAPI[i].id}" onclick="extrairQuizzEscolhido(this)" class="selecionar-quizz">
+            <img src="${todosQuizzesAPI[i].image}">
+            <p>${todosQuizzesAPI[i].title}</p>
         </div>
 		`;
 	}
 }
 
-//**PEDRO
-//
-//
-//
-//*/
-
+// Funções para renderizar e executar a aplicação do quizz
 function extrairQuizzEscolhido(objetoSelecionarQuizz) {
-	const idQuizz = 10080;
-	//const idQuizz = objetoSelecionarQuizz.id;
+	const idQuizz = objetoSelecionarQuizz.id;
 
 	const promessa = axios.get(
 		`https://mock-api.driven.com.br/api/v4/buzzquizz/quizzes/${idQuizz}`
@@ -120,7 +99,7 @@ function construirHTMLQuizzEscolhido(objetoQuizz) {
 		let opcoesHTML = "";
 
 		tituloPerguntaHTML = `
-    <div class="pergunta">
+    <div class="pergunta${i}">
       <div class="conteudo-pergunta">
         <div class="titulo-pergunta" style="background-color: ${corTituloPergunta};">
           <bold>${tituloPergunta}</bold>
@@ -139,14 +118,13 @@ function construirHTMLQuizzEscolhido(objetoQuizz) {
             <input
 			  class="resposta-${validacaoOpcao}"
               type="image"
-			  id='{"pergunta":${i}, "opcao":${j}}'
+			  data-npergunta="${i}"
+			  id="${i}${j}"
               alt="Opcao ${j + 1}"
               src="${objetoOpcao.image}"
 			  onclick="verificarRespostaCerta(this)"
             />
-            <label for='{"pergunta":${i}, "opcao":${j}}'><bold>${
-				objetoOpcao.text
-			}</bold></label>
+            <label for="${i}${j}"><bold>${objetoOpcao.text}</bold></label>
           </div>
           `;
 
@@ -174,24 +152,20 @@ function construirHTMLQuizzEscolhido(objetoQuizz) {
 
 	trocarTela(".pagina-inicial", ".pagina-quizz");
 	pontosObtidos = 0;
+	respostasVerificadas = 0;
 }
 
 function verificarRespostaCerta(inputEscolhido) {
-	objetoOpcaoEscolhida = JSON.parse(inputEscolhido.id);
-	console.log(objetoOpcaoEscolhida);
-
-	perguntaEscolhida = objetoOpcaoEscolhida.pergunta;
-
-	qtdOpcoes = quizzEscolhido.data.questions[perguntaEscolhida].answers.length;
+	const perguntaEscolhida = inputEscolhido.dataset.npergunta;
+	const qtdOpcoes =
+		quizzEscolhido.data.questions[perguntaEscolhida].answers.length;
 
 	if (inputEscolhido.classList.contains("resposta-true")) {
 		pontosObtidos += 1;
 	}
 
 	for (let i = 0; i < qtdOpcoes; i++) {
-		let inputAtual = document.getElementById(
-			`{"pergunta":${perguntaEscolhida}, "opcao":${i}}`
-		);
+		let inputAtual = document.getElementById(`${perguntaEscolhida}${i}`);
 
 		if (inputAtual.classList.contains("resposta-true")) {
 			inputAtual.classList.add("opcao-certa");
@@ -209,7 +183,11 @@ function verificarRespostaCerta(inputEscolhido) {
 
 		inputAtual.disabled = true;
 	}
-	console.log(pontosObtidos);
+	respostasVerificadas += 1;
+
+	if (respostasVerificadas === quizzEscolhido.data.questions.length) {
+		resultadoQuizz();
+	}
 }
 
 function randomizarArray(array) {
@@ -232,31 +210,101 @@ function randomizarArray(array) {
 	return array;
 }
 
-//**VINI
-//
-//
-//
-//*/
+function resultadoQuizz() {
+	const qtdPerguntasQuizzEscolhido = quizzEscolhido.data.questions.length;
 
-function criarPerguntas() {
-	////		ESCONDER 	, 		MOSTRAR
-	trocarTela(".comeco-quizz", ".criar-perguntas");
+	const porcentagemAcerto = Math.floor(
+		(pontosObtidos / qtdPerguntasQuizzEscolhido) * 100
+	);
 
-	for (let i = 0; i < Number(qtdPerguntasNovoQuizz); i++) {
-		criarPerguntasForm.innerHTML += divPerguntas(i);
+	const listaLevelsQuizz = quizzEscolhido.data.levels;
+
+	const listaValoresMinimos = [];
+
+	for (let i = 0; i < listaLevelsQuizz.length; i++) {
+		listaValoresMinimos.push(listaLevelsQuizz[i].minValue);
 	}
 
-	criarPerguntasForm.innerHTML += `<div onclick="validarFormularioPerguntas(this)">Proseguir para </div>`;
+	let listValoresMinimosOrdemCrescente = listaValoresMinimos.sort(
+		(a, b) => a - b
+	);
+
+	let levelAlcancado = 0;
+
+	for (let i = 0; i < listValoresMinimosOrdemCrescente.length; i++) {
+		if (listValoresMinimosOrdemCrescente[i] <= porcentagemAcerto) {
+			levelAlcancado = listValoresMinimosOrdemCrescente[i];
+		}
+	}
+
+	setTimeout(renderizarTelaResultadoQuizz, 2000, levelAlcancado);
 }
 
-function criarNiveis() {
-	////		ESCONDER 	, 		MOSTRAR
-	trocarTela(".criar-perguntas", ".criar-niveis");
-	for (let i = 0; i < Number(qtdNiveisNovoQuizz); i++) {
-		criarNiveisForm.innerHTML += divNiveis(i);
+function renderizarTelaResultadoQuizz(porcentagemAlcancada) {
+	const listaLevelsQuizz = quizzEscolhido.data.levels;
+	let tituloTelaResultado, textoTelaResultado, imageTelaResultado;
+
+	for (let i = 0; i < listaLevelsQuizz.length; i++) {
+		console.log(listaLevelsQuizz[i].minValue);
+		console.log(porcentagemAlcancada);
+		if (listaLevelsQuizz[i].minValue == porcentagemAlcancada) {
+			tituloTelaResultado = listaLevelsQuizz[i].title;
+			textoTelaResultado = listaLevelsQuizz[i].text;
+			imageTelaResultado = listaLevelsQuizz[i].image;
+			break;
+		}
 	}
 
-	criarNiveisForm.innerHTML += `<input type="button" onclick="validarFormularioNiveis(this)" value="Proseguir para criação de níveis">`;
+	const telaFinalizaQuizzHTML = `
+	<div class="caixa-padrao">
+				<div class="conteudo-caixa-padrao">
+					<div class="titulo-quizz-finalizado">
+						${porcentagemAlcancada}% de acerto: ${tituloTelaResultado}
+					</div>
+					<div class="conteudo-quizz-finalizado">
+						<img
+							src="${imageTelaResultado}">
+
+						<div class="texto-quizz-finalizado">${textoTelaResultado}</div>
+					</div>
+				</div>
+					<input type="submit" value="Reiniciar quizz" oonclick="extrairQuizzEscolhido(this)">
+					<p class="voltar-home" onclick="voltarHome(this)">Voltar para home</p>
+				</div>
+	`;
+
+	document.querySelector(".finalizar-quizz").innerHTML =
+		telaFinalizaQuizzHTML;
+
+	trocarTela(".pagina-quizz", ".finalizar-quizz");
+}
+
+// Funções para renderizar telas de criação do novo quizz
+function criarFormularioPerguntas() {
+	const elementoFormularioPerguntas = document.querySelector(
+		".criar-perguntas form"
+	);
+
+	for (let i = 0; i < Number(qtdPerguntasNovoQuizz); i++) {
+		elementoFormularioPerguntas.innerHTML += divPerguntas(i);
+	}
+
+	elementoFormularioPerguntas.innerHTML += `<div onclick="validarFormularioPerguntas(this)">Proseguir para </div>`;
+
+	trocarTela(".comeco-quizz", ".criar-perguntas");
+}
+
+function criarFormularioNiveis() {
+	const elementoFormularioNiveis =
+		document.querySelector(".criar-niveis form");
+
+	for (let i = 0; i < Number(qtdNiveisNovoQuizz); i++) {
+		elementoFormularioNiveis.innerHTML += divNiveis(i);
+	}
+
+	elementoFormularioNiveis.innerHTML += `<input type="button" onclick="validarFormularioNiveis(this)" value="Proseguir para criação de níveis">`;
+
+	trocarTela(".criar-perguntas", ".criar-niveis");
 }
 
 function divPerguntas(i) {
@@ -331,129 +379,7 @@ function abrirCaixaDobravel(e) {
 	content.classList.toggle("ativo");
 }
 
-function submeterDadosQuizz() {
-	objetoNovoQuizz["title"] = document.getElementById("titulo").value;
-	objetoNovoQuizz["image"] = document.getElementById("imagem-quizz").value;
-
-	qtdPerguntasNovoQuizz = document.getElementById(
-		"quantidadePerguntas"
-	).value;
-	qtdNiveisNovoQuizz = document.getElementById("quantidadeNiveis").value;
-
-	document.getElementById("titulo").value = "";
-	document.getElementById("imagem-quizz").value = "";
-	document.getElementById("quantidadePerguntas").value = "";
-	document.getElementById("quantidadeNiveis").value = "";
-
-	criarPerguntas();
-}
-
-function submeterPerguntasQuizz() {
-	let listaPerguntasHTML = document.querySelectorAll(".divPergunta");
-	let listaPerguntas = [];
-
-	console.log("listaPerguntasHTML" + listaPerguntasHTML);
-
-	for (let i = 0; i < qtdPerguntasNovoQuizz; i++) {
-		listaPerguntas.push({
-			title: listaPerguntasHTML[i].querySelector(".tituloPergunta").value,
-			color: listaPerguntasHTML[i].querySelector(".corPergunta").value,
-			answers: resgatarRespostas(listaPerguntasHTML[i]),
-		});
-	}
-
-	objetoNovoQuizz["questions"] = listaPerguntas;
-
-	// console.log("objetoAposCriarPerguntas" + objetoNovoQuizz);
-	// console.log("listaPerguntas" + listaPerguntas);
-
-	criarNiveis();
-}
-
-function resgatarRespostas(perguntaAtual) {
-	const listaOpcoesHTML = perguntaAtual.querySelectorAll(
-		".opcoes-respostas fieldset"
-	);
-
-	let listaRespostas = [];
-
-	for (let j = 0; j < listaOpcoesHTML.length; j++) {
-		const valorInputResposta =
-			listaOpcoesHTML[j].querySelector(".resposta");
-
-		const valorInputImagem = listaOpcoesHTML[j].querySelector(".imagem");
-
-		if (j === 0) {
-			listaRespostas.push({
-				text: valorInputResposta.value,
-				image: valorInputImagem.value,
-				isCorrectAnswer: true,
-			});
-
-			valorInputResposta.value = "";
-			valorInputImagem.value = "";
-		} else {
-			if (
-				valorInputResposta.value != "" &&
-				valorInputImagem.value != ""
-			) {
-				listaRespostas.push({
-					text: valorInputResposta.value,
-					image: valorInputImagem.value,
-					isCorrectAnswer: false,
-				});
-			}
-
-			valorInputResposta.value = "";
-			valorInputImagem.value = "";
-		}
-	}
-
-	return listaRespostas;
-}
-
-function submeterNiveisQuizz() {
-	let listaNiveis = [];
-
-	const listaNiveisHTML = document.querySelectorAll(
-		".criar-niveis .form-container"
-	);
-
-	for (let i = 0; i < listaNiveisHTML.length; i++) {
-		const titulo = listaNiveisHTML[i].querySelector(".titulo-nivel");
-		const image = listaNiveisHTML[i].querySelector(".imagem-nivel");
-		const texto = listaNiveisHTML[i].querySelector(".text-nivel");
-		const acertoMinimoNivel = listaNiveisHTML[i].querySelector(
-			".acerto-minimo-nivel"
-		);
-
-		listaNiveis.push({
-			title: titulo.value,
-			image: image.value,
-			text: texto.value,
-			minValue: acertoMinimoNivel.value,
-		});
-
-		titulo.value = "";
-		image.value = "";
-		texto.value = "";
-		acertoMinimoNivel.value = "";
-	}
-
-	objetoNovoQuizz["levels"] = listaNiveis;
-	console.log(objetoNovoQuizz);
-}
-
-function criarQuizz(obj) {
-	const promise = axios.post(
-		"https://mock-api.driven.com.br/api/v4/buzzquizz/quizzes",
-		obj
-	);
-
-	//.then( trocartela, niveis->home
-	//load pegarDados() )
-}
-
+// Funções de validação dos inputs fornecidos na criação do novo quizz
 function validarFormularioPerguntas(formulario) {
 	const listaElementosPerguntas =
 		formulario.parentNode.querySelectorAll(".form-container");
@@ -469,7 +395,7 @@ function validarFormularioPerguntas(formulario) {
 	}
 
 	if (mensagemAlert === "") {
-		submeterPerguntasQuizz();
+		submeterFormularioPerguntas();
 	} else alert(mensagemAlert);
 }
 
@@ -575,6 +501,8 @@ function validarFormularioNiveis(element) {
 	let tudoCerto = true;
 	let umMinimoTemZero = false;
 
+	//verifica se pelo menos um input
+	//de % de acerto minimo tem o valor zero
 	for (let i = 0; i < inputsMinimoNivel.length; i++) {
 		const input = inputsMinimoNivel[i];
 
@@ -587,6 +515,9 @@ function validarFormularioNiveis(element) {
 		}
 	}
 
+	//faz todas as validaçoes
+	//o label loopExterno é usado para dar um break e nao continuar
+	//rodando quando uma condiçao for true
 	loopExterno: for (let i = 0; i < inputs.length; i++) {
 		const input = inputs[i];
 		const valorInput = input.value;
@@ -644,4 +575,162 @@ function validarFormularioNiveis(element) {
 	if (umMinimoTemZero && tudoCerto) {
 		submeterNiveisQuizz();
 	}
+}
+
+// Funções para submissão e criação do novo Quizz após ser aprovado na validação
+function submeterFormularioDadosGerais() {
+	// Zerar objeto novo quizz
+	objetoNovoQuizz = {};
+
+	objetoNovoQuizz["title"] = document.getElementById("titulo").value;
+	objetoNovoQuizz["image"] = document.getElementById("imagem-quizz").value;
+
+	qtdPerguntasNovoQuizz = document.getElementById(
+		"quantidadePerguntas"
+	).value;
+	qtdNiveisNovoQuizz = document.getElementById("quantidadeNiveis").value;
+
+	document.getElementById("titulo").value = "";
+	document.getElementById("imagem-quizz").value = "";
+	document.getElementById("quantidadePerguntas").value = "";
+	document.getElementById("quantidadeNiveis").value = "";
+
+	criarFormularioPerguntas();
+}
+
+function submeterFormularioPerguntas() {
+	let listaPerguntasHTML = document.querySelectorAll(".divPergunta");
+	let listaPerguntas = [];
+
+	console.log("listaPerguntasHTML" + listaPerguntasHTML);
+
+	for (let i = 0; i < qtdPerguntasNovoQuizz; i++) {
+		const perguntaAtual = listaPerguntasHTML[i];
+
+		listaPerguntas.push({
+			title: perguntaAtual.querySelector(".tituloPergunta").value,
+			color: perguntaAtual.querySelector(".corPergunta").value,
+			answers: submeterPerguntaAtual(perguntaAtual),
+		});
+	}
+
+	objetoNovoQuizz["questions"] = listaPerguntas;
+
+	criarFormularioNiveis();
+}
+
+function submeterPerguntaAtual(perguntaAtual) {
+	const listaOpcoesHTML = perguntaAtual.querySelectorAll(
+		".opcoes-respostas fieldset"
+	);
+
+	let listaRespostas = [];
+
+	for (let j = 0; j < listaOpcoesHTML.length; j++) {
+		const valorInputResposta =
+			listaOpcoesHTML[j].querySelector(".resposta");
+
+		const valorInputImagem = listaOpcoesHTML[j].querySelector(".imagem");
+
+		if (j === 0) {
+			listaRespostas.push({
+				text: valorInputResposta.value,
+				image: valorInputImagem.value,
+				isCorrectAnswer: true,
+			});
+
+			valorInputResposta.value = "";
+			valorInputImagem.value = "";
+		} else {
+			if (
+				valorInputResposta.value != "" &&
+				valorInputImagem.value != ""
+			) {
+				listaRespostas.push({
+					text: valorInputResposta.value,
+					image: valorInputImagem.value,
+					isCorrectAnswer: false,
+				});
+			}
+
+			valorInputResposta.value = "";
+			valorInputImagem.value = "";
+		}
+	}
+
+	return listaRespostas;
+}
+
+function submeterNiveisQuizz() {
+	let listaNiveis = [];
+
+	const listaNiveisHTML = document.querySelectorAll(
+		".criar-niveis .form-container"
+	);
+
+	for (let i = 0; i < listaNiveisHTML.length; i++) {
+		const titulo = listaNiveisHTML[i].querySelector(".titulo-nivel");
+		const image = listaNiveisHTML[i].querySelector(".imagem-nivel");
+		const texto = listaNiveisHTML[i].querySelector(".text-nivel");
+		const acertoMinimoNivel = listaNiveisHTML[i].querySelector(
+			".acerto-minimo-nivel"
+		);
+
+		listaNiveis.push({
+			title: titulo.value,
+			image: image.value,
+			text: texto.value,
+			minValue: acertoMinimoNivel.value,
+		});
+
+		titulo.value = "";
+		image.value = "";
+		texto.value = "";
+		acertoMinimoNivel.value = "";
+	}
+
+	objetoNovoQuizz["levels"] = listaNiveis;
+	console.log(objetoNovoQuizz);
+	criarQuizz(objetoNovoQuizz);
+}
+
+function criarQuizz() {
+	const promise = axios.post(
+		"https://mock-api.driven.com.br/api/v4/buzzquizz/quizzes",
+		objetoNovoQuizz
+	);
+
+	promise.then((response) => {
+		const idQuizzCriado = response.data.id;
+		// => Salvar 'idQuizzCriado' no localStorage <== //
+		console.log(idQuizzCriado);
+	});
+}
+
+function renderizarQuizzCriado(objQuizzCriado) {
+	const telaQuizzPronto = document.querySelector(".quizz-pronto");
+
+	const conteudo = `<p>Seu quizz esta pronto!</p>
+				<div id="${objQuizzCriado.id}" onclick="" class="selecionar-quizz" style="width: 500px; height: 266px;">
+					<img src="${objQuizzCriado.image}">
+					<p>${objQuizzCriado.title}</p>
+				</div>
+
+				<input type="submit" value="Acessar Quizz" oonclick="extrairQuizzEscolhido(this)">
+				<p class="voltar-home" onclick="voltarHome(this)">Voltar para home</p>`;
+
+	telaQuizzPronto.innerHTML = conteudo;
+}
+
+// Funções acessórias
+
+function voltarHome(e) {
+	const telaAtual = e.parentNode.parentNode.classList.value;
+	console.log(telaAtual);
+	trocarTela(`.${telaAtual}`, `.pagina-inicial`);
+}
+
+function trocarTela(esconder, mostrar) {
+	document.querySelector(esconder).classList.add("esconder");
+	document.querySelector(mostrar).classList.remove("esconder");
 }

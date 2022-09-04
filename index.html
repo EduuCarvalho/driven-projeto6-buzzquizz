@@ -19,7 +19,7 @@
 	<bold class="topo-fixo-buzzquizz">BuzzQuizz</bold>
 
 	<div class="conteudo-pagina">
-		<div class="pagina-inicial esconder">
+		<div class="pagina-inicial">
 			<!-- Edu -->
 			<div class="caixa-criarQuizz">
 				<p>Você não criou nenhum <br>quizz ainda :(</br></p>
@@ -28,7 +28,8 @@
 			<div class="caixa-quizzCriado">
 				<div class="tituloBotao-quizzCriado">
 					<div class="titulo-quizz-criado">Seus Quizzes</div>
-					<ion-icon class="botaoAddQuizz" name="add-circle"></ion-icon>
+					<ion-icon onclick="trocarTela('.pagina-inicial', '.criar-quizz')" class="botaoAddQuizz"
+						name="add-circle"></ion-icon>
 				</div>
 				<div class="container-quizzCriado"></div>
 			</div>
@@ -43,11 +44,36 @@
 
 		</div>
 
+		<div class="finalizar-quizz esconder">
+			<div class="caixa-padrao">
+				<div class="conteudo-caixa-padrao">
+					<div class="titulo-quizz-finalizado">
+						80% de acerto: Você é praticamente um aluno de Hogrwarts!
+					</div>
+					<div class="conteudo-quizz-finalizado">
+						<img
+							src="https://i.picsum.photos/id/984/600/600.jpg?hmac=pqb18_v31kddPUzBRAYyTFLVE-6VXrNJsL98mA33z4o">
+
+						<div class="texto-quizz-finalizado">Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+							Suspendisse sollicitudin id orci eget rhoncus. In et porttitor
+							ex, ac hendrerit mi. Mauris tincidunt, purus sed scelerisque consequat, lacus turpis egestas
+							magna, vel tincidunt arcu
+							felis a neque. Proin nec sapien eu lectus efficitur placerat. Nullam mollis tempor ipsum,
+							vitae
+							rutrum ipsum congue ac.
+							Integer malesuada quam ut erat gravida, eget efficitur massa feugiat. Nullam fringilla lacus
+							ut
+							lectus feugiat iaculis.</div>
+					</div>
+				</div>
+			</div>
+
+		</div>
+
 		<!-- VINI -->
-		<div class="criar-quizz">
+		<div class="criar-quizz esconder">
 
 			<div class="comeco-quizz">
-				<!-- <form action="javascript:;" onsubmit="alert('oi')"> -->
 				<form>
 					<p>Comece pelo começo</p>
 					<div class="form-container">
@@ -60,7 +86,8 @@
 								placeholder="Quantidade de níveis do quizz">
 						</fieldset>
 					</div>
-					<input type="button" onclick="submeterDadosQuizz()" value="Proseguir para criação de perguntas">
+					<input type="button" onclick="submeterFormularioDadosGerais()"
+						value="Proseguir para criação de perguntas">
 				</form>
 			</div>
 
@@ -75,6 +102,10 @@
 					<p>Agora, decida os níveis</p>
 
 				</form>
+			</div>
+
+			<div class="quizz-pronto">
+
 			</div>
 
 		</div>
