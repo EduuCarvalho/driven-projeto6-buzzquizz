@@ -91,7 +91,7 @@ function extrairQuizzEscolhido(objetoSelecionarQuizz) {
 function construirHTMLQuizzEscolhido(objetoQuizz) {
 	console.log(objetoQuizz);
 	quizzEscolhido = objetoQuizz;
-	objetoQuizzData = quizzEscolhido.data;
+	const objetoQuizzData = quizzEscolhido.data;
 
 	const tituloQuizz = objetoQuizzData.title;
 	const listaPerguntasQuizz = objetoQuizzData.questions;
