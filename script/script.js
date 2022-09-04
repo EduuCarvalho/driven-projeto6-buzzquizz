@@ -1,5 +1,6 @@
 let quizzEscolhido,
 	pontosObtidos,
+	respostasVerificadas,
 	qtdPerguntasNovoQuizz,
 	qtdNiveisNovoQuizz,
 	todosQuizzesAPI = [],
@@ -151,6 +152,7 @@ function construirHTMLQuizzEscolhido(objetoQuizz) {
 
 	trocarTela(".pagina-inicial", ".pagina-quizz");
 	pontosObtidos = 0;
+	respostasVerificadas = 0;
 }
 
 function verificarRespostaCerta(inputEscolhido) {
@@ -181,7 +183,11 @@ function verificarRespostaCerta(inputEscolhido) {
 
 		inputAtual.disabled = true;
 	}
-	console.log(pontosObtidos);
+	respostasVerificadas += 1;
+
+	if (respostasVerificadas === quizzEscolhido.data.questions.length) {
+		resultadoQuizz();
+	}
 }
 
 function randomizarArray(array) {
@@ -202,6 +208,42 @@ function randomizarArray(array) {
 	}
 
 	return array;
+}
+
+function resultadoQuizz() {
+	const qtdPerguntasQuizzEscolhido = quizzEscolhido.data.questions.length;
+
+	const porcentagemAcerto = Math.floor(
+		(pontosObtidos / qtdPerguntasQuizzEscolhido) * 100
+	);
+
+	const listaLevelsQuizz = quizzEscolhido.data.levels;
+
+	const listaValoresMinimos = [];
+
+	for (let i = 0; i < listaLevelsQuizz.length; i++) {
+		listaValoresMinimos.push(listaLevelsQuizz[i].minValue);
+	}
+
+	let listValoresMinimosOrdemCrescente = listaValoresMinimos.sort(
+		(a, b) => a - b
+	);
+
+	let levelAlcancado = 0;
+
+	for (let i = 0; i < listValoresMinimosOrdemCrescente.length; i++) {
+		if (listValoresMinimosOrdemCrescente[i] <= porcentagemAcerto) {
+			levelAlcancado = listValoresMinimosOrdemCrescente[i];
+		}
+	}
+
+	setTimeout(renderizarTelaResultadoQuizz, 2000, levelAlcancado);
+}
+
+function renderizarTelaResultadoQuizz(porcentagemAlcancada) {
+	alert(
+		`Sua colocacao foi: ${porcentagemAlcancada}. (posteriormente teremos a tela mostrando a sua colocaçao).`
+	);
 }
 
 // Funções para renderizar telas de criação do novo quizz
