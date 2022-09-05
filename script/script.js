@@ -4,6 +4,7 @@ let quizzEscolhido,
 	qtdPerguntasNovoQuizz,
 	qtdNiveisNovoQuizz,
 	todosQuizzesAPI = [],
+	todosQuizzesCriados = [],
 	objetoNovoQuizz = {};
 //idQuizzCriado;
 
@@ -14,7 +15,7 @@ function receberDadosAPI() {
 	const promessa = axios.get(
 		"https://mock-api.driven.com.br/api/v4/buzzquizz/quizzes"
 	);
-	promessa.then(receberQuizz);
+	promessa.then(respostaAPI);
 	promessa.catch(receberFalhou);
 }
 
@@ -22,9 +23,15 @@ function receberFalhou(erro) {
 	console.log(erro);
 }
 
-function receberQuizz(resposta) {
+function respostaAPI(resposta) {
 	todosQuizzesAPI = resposta.data;
 	console.log(todosQuizzesAPI);
+
+	todosQuizzesAPI.forEach((quizz) => {
+		if (IDsCriadosPeloUsuario.includes(quizz.id)) {
+			todosQuizzesCriados.push(quizz);
+		}
+	});
 
 	renderizarQuizzesGerais();
 	renderizarQuizzesProprios(); //ATENÇÃO, SOMENTE UM TESTE, ESSA FUNÇÃO PUXAR QUIZZ POR ID CRIADO PELO USUARIO
@@ -46,14 +53,30 @@ function renderizarQuizzesGerais() {
 function renderizarQuizzesProprios() {
 	const quizzCriado = document.querySelector(".container-quizzCriado");
 	quizzCriado.innerHTML = "";
-	for (let i = 0; i < 10; i++) {
+	for (let i = 0; i < todosQuizzesCriados.length; i++) {
 		quizzCriado.innerHTML += `
-		<div data-id="${todosQuizzesAPI[i].id}" onclick="extrairQuizzEscolhido(this)" class="selecionar-quizz">
-            <img src="${todosQuizzesAPI[i].image}">
-            <p>${todosQuizzesAPI[i].title}</p>
+		<div data-id="${todosQuizzesCriados[i].id}" onclick="extrairQuizzEscolhido(this)" class="selecionar-quizz">
+            <img src="${todosQuizzesCriados[i].image}">
+            <p>${todosQuizzesCriados[i].title}</p>
         </div>
 		`;
 	}
+
+	if (todosQuizzesCriados.length === 0) {
+		document
+			.querySelector(".caixa-criarQuizz")
+			.classList.remove("esconder");
+
+		document.querySelector(".caixa-quizzCriado").classList.add("esconder");
+	} else {
+		document
+			.querySelector(".caixa-quizzCriado")
+			.classList.remove("esconder");
+
+		document.querySelector(".caixa-criarQuizz").classList.add("esconder");
+	}
+
+	todosQuizzesCriados = [];
 }
 
 // Funções para renderizar e executar a aplicação do quizz
@@ -711,26 +734,27 @@ function criarQuizz() {
 
 	promise.then((response) => {
 		let objQuizzCriado = response.data;
-		renderizarQuizzCriado(objQuizzCriado);
+		const idQuizzCriado = objQuizzCriado.id;
 
-		// => Salvar 'idQuizzCriado' no localStorage <== //
-<<<<<<< HEAD
-=======
 		console.log(idQuizzCriado);
+		armazenarLocalStorage(idQuizzCriado);
 
-		renderizarQuizzCriado(response);
->>>>>>> 565cf028c9f2a834058b25a9f32d35653ca9aa73
+		console.log(objQuizzCriado);
+		renderizarTelaFinalCriarQuizz(objQuizzCriado);
 	});
 }
-let storageID = localStorage.getItem("guardarID");
 
+// Carrega ids criados ao inicializar o buzz quizz
+let storageID = localStorage.getItem("guardarID");
 storageID = JSON.parse(storageID);
 let IDsCriadosPeloUsuario;
+
 if (storageID == null) {
 	IDsCriadosPeloUsuario = [];
 } else {
 	IDsCriadosPeloUsuario = storageID;
 }
+
 console.log("IDS", IDsCriadosPeloUsuario);
 
 function armazenarLocalStorage(idQuizzCriado) {
@@ -739,27 +763,21 @@ function armazenarLocalStorage(idQuizzCriado) {
 	localStorage.setItem("guardarID", stringIDUsuario);
 }
 
-function renderizarQuizzCriado(objQuizzCriado) {
-	let esconderNiveis = document.querySelector(".criar-niveis form");
-	esconderNiveis.classList.add("esconder");
+function renderizarTelaFinalCriarQuizz(objQuizzCriado) {
 	const telaQuizzPronto = document.querySelector(".quizz-pronto");
 
 	const conteudo = `<p>Seu quizz esta pronto!</p>
-				<div id="${objQuizzCriado.id}" onclick="" class="selecionar-quizz" style="width: 500px; height: 266px;">
+				<div id="${objQuizzCriado.id}" class="selecionar-quizz" style="width: 500px; height: 266px;">
 					<img src="${objQuizzCriado.image}">
 					<p>${objQuizzCriado.title}</p>
 				</div>
 
-				<input type="submit" data-id="${objQuizzCriado.data.id}" value="Acessar Quizz" onclick="extrairQuizzEscolhido(this)">
+				<input type="submit" data-id="${objQuizzCriado.id}" value="Acessar Quizz" onclick="extrairQuizzEscolhido(this)">
 				<p class="voltar-home" onclick="voltarHome(this)">Voltar para home</p>`;
 
 	telaQuizzPronto.innerHTML = conteudo;
 
-<<<<<<< HEAD
-	armazenarLocalStorage(objQuizzCriado.id);
-=======
 	trocarTela(".criar-niveis", ".quizz-pronto");
->>>>>>> 565cf028c9f2a834058b25a9f32d35653ca9aa73
 }
 
 // Funções acessórias
@@ -768,6 +786,13 @@ function voltarHome(e) {
 	const telaAtual = e.parentNode.parentNode.classList.value;
 	console.log(telaAtual);
 	trocarTela(`.${telaAtual}`, `.pagina-inicial`);
+	receberDadosAPI();
+
+	document.querySelector(".quizz-pronto").classList.add("esconder");
+	document.querySelector(".comeco-quizz").classList.remove("esconder");
+
+	//document.querySelector(".finalizar-quizz").classList.add("esconder");
+	//document.querySelector(".pagina-quizz").classList.remove("esconder");
 }
 
 function retornarTelaAtual() {
