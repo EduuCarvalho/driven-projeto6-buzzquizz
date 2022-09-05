@@ -329,9 +329,11 @@ function renderizarTelaResultadoQuizz(porcentagemAlcancada) {
 						<div class="texto-quizz-finalizado">${textoTelaResultado}</div>
 					</div>
 				</div>
-					<input data-id="${quizzEscolhido.data.id}" type="submit" value="Reiniciar quizz" onclick="extrairQuizzEscolhido(this)">
+	</div>
+
+					<button data-id="${quizzEscolhido.data.id}" onclick="extrairQuizzEscolhido(this)">Reiniciar quizz</button>
 					<p class="voltar-home" onclick="voltarHome(this)">Voltar para home</p>
-				</div>
+				
 	`;
 
 	document.querySelector(".finalizar-quizz").innerHTML =
@@ -365,7 +367,7 @@ function criarFormularioPerguntas() {
 		elementoFormularioPerguntas.innerHTML += divPerguntas(i);
 	}
 
-	elementoFormularioPerguntas.innerHTML += `<div onclick="validarFormularioPerguntas(this)">Proseguir para </div>`;
+	elementoFormularioPerguntas.innerHTML += `<input type="button" onclick="validarFormularioPerguntas(this)" value="Prosseguir para criação dos níveis">`;
 
 	trocarTela(".comeco-quizz", ".criar-perguntas");
 }
@@ -378,7 +380,7 @@ function criarFormularioNiveis() {
 		elementoFormularioNiveis.innerHTML += divNiveis(i);
 	}
 
-	elementoFormularioNiveis.innerHTML += `<input type="button" onclick="validarFormularioNiveis(this)" value="Proseguir para criação de níveis">`;
+	elementoFormularioNiveis.innerHTML += `<input type="button" onclick="validarFormularioNiveis(this)" value="Finalizar criação do Quizz">`;
 
 	trocarTela(".criar-perguntas", ".criar-niveis");
 }
@@ -394,7 +396,7 @@ function divPerguntas(i) {
 						<div class="conteudo-dobravel">
 
 							<fieldset class="info-gerais-pergunta">
-								<input data-tipo="texto-pergunta" class="tituloPergunta" type="text" placeholder="Texto da pergunta" minlength="20">
+								<input data-tipo="texto-pergunta" class="tituloPergunta" type="text" placeholder="Texto da pergunta"">
 								<input data-tipo="cor" class="corPergunta" type="text" placeholder="Cor de fundo da pergunta">
 							</fieldset>
 
@@ -402,7 +404,7 @@ function divPerguntas(i) {
 							<!-- RESPOSTA CORRETA -->
 							<fieldset class="resposta-correta">
 								<div class="legend">Resposta correta</div class="legend">
-								<input data-tipo="texto-opcao" class="resposta resposta-correta" type="text" placeholder="Resposta correta" minlength="">
+								<input data-tipo="texto-opcao" class="resposta resposta-correta" type="text" placeholder="Resposta correta">
 								<input data-tipo="URL" class="imagem" type="url" placeholder="URL da imagem do seu quizz">
 							</fieldset>
 
@@ -410,17 +412,17 @@ function divPerguntas(i) {
 							<div class="respostas-incorretas">
 								<div class="legend">Respostas incorretas</div class="legend">
 								<fieldset>
-									<input data-tipo="texto-opcao" class="resposta resposta-incorreta" type="text" placeholder="Resposta incorreta 1" minlength="">
+									<input data-tipo="texto-opcao" class="resposta resposta-incorreta" type="text" placeholder="Resposta incorreta 1">
 									<input data-tipo="URL" class="imagem" type="url" placeholder="URL da imagem do seu quizz">
 								</fieldset>
 
 								<fieldset>
-									<input data-tipo="texto-opcao" class = "resposta resposta-incorreta" type="text" placeholder="Resposta incorreta 2" minlength="">
+									<input data-tipo="texto-opcao" class = "resposta resposta-incorreta" type="text" placeholder="Resposta incorreta 2">
 									<input data-tipo="URL" class = "imagem" type="url" placeholder="URL da imagem do seu quizz">
 								</fieldset>
 
 								<fieldset>
-									<input data-tipo="texto-opcao" class = "resposta resposta-incorreta" type="text" placeholder="Resposta incorreta 3" minlength="">
+									<input data-tipo="texto-opcao" class = "resposta resposta-incorreta" type="text" placeholder="Resposta incorreta 3">
 									<input data-tipo="URL" class = "imagem" type="url" placeholder="URL da imagem do seu quizz">
 								</fieldset>
 							</div>
@@ -815,12 +817,12 @@ function renderizarTelaFinalCriarQuizz(objQuizzCriado) {
 	const telaQuizzPronto = document.querySelector(".quizz-pronto");
 
 	const conteudo = `<p>Seu quizz esta pronto!</p>
-				<div id="${objQuizzCriado.id}" class="selecionar-quizz" style="width: 500px; height: 266px;">
+				<div id="${objQuizzCriado.id}" class="selecionar-quizz">
 					<img src="${objQuizzCriado.image}">
 					<p>${objQuizzCriado.title}</p>
 				</div>
 
-				<input type="submit" data-id="${objQuizzCriado.id}" value="Acessar Quizz" onclick="extrairQuizzEscolhido(this)">
+				<input type="button" data-id="${objQuizzCriado.id}" value="Acessar Quizz" onclick="extrairQuizzEscolhido(this)">
 				<p class="voltar-home" onclick="voltarHome(this)">Voltar para home</p>`;
 
 	telaQuizzPronto.innerHTML = conteudo;
@@ -831,13 +833,27 @@ function renderizarTelaFinalCriarQuizz(objQuizzCriado) {
 // Funções acessórias
 
 function voltarHome(e) {
-	const telaAtual = e.parentNode.parentNode.classList.value;
+	let listaTelas = document.querySelectorAll(".conteudo-pagina > div");
+	listaTelas = Array.from(listaTelas);
+
+	console.log(listaTelas);
+
+	let primeiroElemento = e.parentNode;
+
+	let elementoAtual = primeiroElemento;
+
+	console.log(elementoAtual);
+
+	while (!listaTelas.includes(elementoAtual)) {
+		elementoAtual = elementoAtual.parentNode;
+	}
+
+	const telaAtual = elementoAtual.classList.value;
 	console.log(telaAtual);
 	trocarTela(`.${telaAtual}`, `.pagina-inicial`);
 	receberDadosAPI();
 
-	document.querySelector(".quizz-pronto").classList.add("esconder");
-	document.querySelector(".comeco-quizz").classList.remove("esconder");
+	trocarTela(".quizz-pronto", ".comeco-quizz");
 
 	window.scrollTo(0, 0);
 
