@@ -16,31 +16,47 @@
 </head>
 
 <body>
-	<bold class="topo-fixo-buzzquizz">BuzzQuizz</bold>
+	<div class="topo-fixo-buzzquizz" onclick="windowReload()">
+		<bold>BuzzQuizz</bold>
+	</div>
 
 	<div class="conteudo-pagina">
 		<div class="pagina-inicial">
 			<!-- Edu -->
-			<div class="caixa-criarQuizz">
+			<div class="caixa-criarQuizz esconder">
 				<p>Você não criou nenhum <br>quizz ainda :(</br></p>
-				<button onclick="trocarTela('.pagina-inicial', '.criar-quizz')" class="criarQuizz1">Criar Quizz</button>
+				<button onclick="trocarTela('.pagina-inicial', '.criar-quizz')" class="criarQuizz1">Criar
+					Quizz</button>
+
 			</div>
+
 			<div class="caixa-quizzCriado esconder">
 				<div class="tituloBotao-quizzCriado">
 					<div class="titulo-quizz-criado">Seus Quizzes</div>
-					<ion-icon onclick="trocarTela('.pagina-inicial', '.criar-quizz')" class="botaoAddQuizz"
-						name="add-circle"></ion-icon>
+
+					<span class="spanAddQuizz" onclick="trocarTela('.pagina-inicial', '.criar-quizz')"
+						style="font-size: x-large; cursor:pointer;">
+						<ion-icon class="botaoAddQuizz" name="add-circle"></ion-icon>
+					</span>
+
+					<div class="descricao-botao">Criar um novo quizz</div>
 				</div>
+
 				<div class="container-quizzCriado"></div>
 			</div>
 
-			<div class="titulo-todos-quizzes">Todos os Quizzes</div>
-			<div class="container-quizzes"></div>
+			<div class="caixa-todos-quizzes esconder">
+				<div class="titulo-todos-quizzes">Todos os Quizzes</div>
+				<div class="container-quizzes"></div>
+			</div>
 		</div>
-
 
 		<!-- PEDRO -->
 		<div class="pagina-quizz esconder">
+
+		</div>
+
+		<div class="iniciar-quizz esconder">
 
 		</div>
 
@@ -111,6 +127,12 @@
 		</div>
 
 	</div>
+
+	<footer
+		style="text-align: center; font-size: 14px; margin-inline:auto; margin-top: 20px; margin-bottom: 20px; font-style: oblique; max-width: 700px; line-height: 20px;">
+		Esse projeto foi desenvolvido por Pedro, Eduardo e Vinicius em 09/2022 como criterio parcial para aprovação no
+		módulo 1 do curso de desenvolvimento web fornecido pela Driven.
+	</footer>
 	<script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
 	<script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
 

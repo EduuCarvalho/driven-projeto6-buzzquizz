@@ -6,7 +6,6 @@ let quizzEscolhido,
 	todosQuizzesAPI = [],
 	todosQuizzesCriados = [],
 	objetoNovoQuizz = {};
-//idQuizzCriado;
 
 receberDadosAPI();
 
@@ -33,8 +32,9 @@ function respostaAPI(resposta) {
 		}
 	});
 
+	console.log(todosQuizzesCriados);
 	renderizarQuizzesGerais();
-	renderizarQuizzesProprios(); //ATENÇÃO, SOMENTE UM TESTE, ESSA FUNÇÃO PUXAR QUIZZ POR ID CRIADO PELO USUARIO
+	renderizarQuizzesProprios();
 }
 
 function renderizarQuizzesGerais() {
@@ -48,6 +48,8 @@ function renderizarQuizzesGerais() {
         </div>
         `;
 	}
+
+	quizzesProntos.parentNode.classList.remove("esconder");
 }
 
 function renderizarQuizzesProprios() {
@@ -106,8 +108,10 @@ function construirHTMLQuizzEscolhido(objetoQuizz) {
 	let perguntasFeedHTML = "";
 
 	tituloQuizzHTML = `
-  <div class="titulo-pagina-quizz" style="background-image: url('${imagemTituloQuizz}')">
+  <div class="titulo-pagina-quizz titulo-pagina-quizz-inicio" style="background-image: url('${imagemTituloQuizz}')">
     ${tituloQuizz}
+
+	<button onclick="iniciarQuizz()">Começar Quizz</button>
   </div>
 
   <div class="perguntas-feed">
@@ -125,7 +129,7 @@ function construirHTMLQuizzEscolhido(objetoQuizz) {
 		let opcoesHTML = "";
 
 		tituloPerguntaHTML = `
-    <div class="pergunta${i}">
+    <div class="pergunta pergunta${i}">
       <div class="conteudo-pergunta">
         <div class="titulo-pergunta" style="background-color: ${corTituloPergunta};">
           <bold>${tituloPergunta}</bold>
@@ -176,22 +180,45 @@ function construirHTMLQuizzEscolhido(objetoQuizz) {
 
 	document.querySelector(".pagina-quizz").innerHTML = paginaQuizzHTML;
 
+	window.scrollTo(0, 0);
+
 	trocarTela(`.${retornarTelaAtual()}`, ".pagina-quizz");
 	pontosObtidos = 0;
 	respostasVerificadas = 0;
 }
 
+function iniciarQuizz() {
+	document
+		.querySelector(".titulo-pagina-quizz-inicio")
+		.classList.remove("titulo-pagina-quizz-inicio");
+
+	document
+		.querySelector(".titulo-pagina-quizz button")
+		.classList.add("esconder");
+
+	setTimeout(() => {
+		document.querySelector(".pergunta0").scrollIntoView({
+			block: "center",
+			behavior: "instant",
+		});
+	}, 1000);
+
+	console.log(document.querySelector(".pergunta0"));
+}
+
 function verificarRespostaCerta(inputEscolhido) {
-	const perguntaEscolhida = inputEscolhido.dataset.npergunta;
+	const indexPerguntaEscolhida = inputEscolhido.dataset.npergunta;
 	const qtdOpcoes =
-		quizzEscolhido.data.questions[perguntaEscolhida].answers.length;
+		quizzEscolhido.data.questions[indexPerguntaEscolhida].answers.length;
 
 	if (inputEscolhido.classList.contains("resposta-true")) {
 		pontosObtidos += 1;
 	}
 
 	for (let i = 0; i < qtdOpcoes; i++) {
-		let inputAtual = document.getElementById(`${perguntaEscolhida}${i}`);
+		let inputAtual = document.getElementById(
+			`${indexPerguntaEscolhida}${i}`
+		);
 
 		if (inputAtual.classList.contains("resposta-true")) {
 			inputAtual.classList.add("opcao-certa");
@@ -213,6 +240,14 @@ function verificarRespostaCerta(inputEscolhido) {
 
 	if (respostasVerificadas === quizzEscolhido.data.questions.length) {
 		resultadoQuizz();
+	} else {
+		const elementoPergunta = document.querySelector(
+			`.pergunta${indexPerguntaEscolhida}`
+		);
+		elementoPergunta.nextElementSibling.scrollIntoView({
+			block: "center",
+			behavior: "smooth",
+		});
 	}
 }
 
@@ -303,9 +338,22 @@ function renderizarTelaResultadoQuizz(porcentagemAlcancada) {
 		telaFinalizaQuizzHTML;
 
 	trocarTela(".pagina-quizz", ".finalizar-quizz");
+
+	document.querySelector(".finalizar-quizz .caixa-padrao").scrollIntoView({
+		block: "center",
+		behavior: "instant",
+	});
 }
 
-function reiniciarQuizz() {}
+function finalizarQuizz() {
+	document
+		.querySelector(".titulo-pagina-quizz-inicio")
+		.classList.add("titulo-pagina-quizz-inicio");
+
+	document
+		.querySelector(".titulo-pagina-quizz button")
+		.classList.remove("esconder");
+}
 
 // Funções para renderizar telas de criação do novo quizz
 function criarFormularioPerguntas() {
@@ -791,6 +839,8 @@ function voltarHome(e) {
 	document.querySelector(".quizz-pronto").classList.add("esconder");
 	document.querySelector(".comeco-quizz").classList.remove("esconder");
 
+	window.scrollTo(0, 0);
+
 	//document.querySelector(".finalizar-quizz").classList.add("esconder");
 	//document.querySelector(".pagina-quizz").classList.remove("esconder");
 }
@@ -816,4 +866,8 @@ function retornarTelaAtual() {
 function trocarTela(esconder, mostrar) {
 	document.querySelector(esconder).classList.add("esconder");
 	document.querySelector(mostrar).classList.remove("esconder");
+}
+
+function windowReload() {
+	document.location.reload(true);
 }
