@@ -78,9 +78,6 @@ ion-icon {
 }
 
 .caixa-criarQuizz p {
-	font-family: "Roboto", sans-serif;
-	font-style: normal;
-
 	text-align: center;
 
 	color: #b9b9b9;
@@ -92,6 +89,7 @@ ion-icon {
 
 	margin-bottom: 15px;
 }
+
 .caixa-criarQuizz button {
 	color: #ec362d;
 
@@ -179,6 +177,8 @@ ion-icon {
 	display: flex;
 	justify-content: space-between;
 	flex-wrap: wrap;
+	overflow-y: scroll;
+	max-height: 230px;
 }
 
 .caixa-todos-quizzes {
@@ -189,7 +189,7 @@ ion-icon {
 	padding: 20px;
 	border-radius: 20px;
 
-	background-color: #fafafa;
+	background-color: white;
 }
 
 .titulo-todos-quizzes {
@@ -204,6 +204,7 @@ ion-icon {
 	text-align: center;
 	font-style: normal;
 }
+
 .container-quizzes {
 	margin-top: 12px;
 
@@ -214,47 +215,83 @@ ion-icon {
 	display: flex;
 	justify-content: space-between;
 	flex-wrap: wrap;
+	gap: 15px;
 }
 
 .selecionar-quizz {
 	width: 32.35%;
 	height: 27vh;
 	position: relative;
-	margin-bottom: 12px;
 
-	border: 2px solid rgb(128, 128, 128);
-	border-radius: 10px;
-
+	border-radius: 5px;
 	cursor: pointer;
+
+	transition: all 200ms ease-in;
 }
 
 .selecionar-quizz:hover {
-	filter: brightness(60%);
+	transform: scale(1.03);
 }
 
 .selecionar-quizz img {
 	width: 100%;
 	height: 100%;
-	border-radius: 8px;
+
+	border-radius: 5px;
 
 	object-fit: cover;
 }
 
 .selecionar-quizz p {
-	color: #ffffff;
-
-	font-family: "Roboto";
-	font-style: normal;
-	font-weight: 400;
+	color: #fff;
 	font-size: 19px;
 
 	line-height: 22px;
-
-	position: absolute;
-	bottom: 10px;
-	padding: 12px;
+	text-align: center;
 
 	word-break: break-all;
+}
+
+.selecionar-quizz .overlay {
+	position: absolute;
+	top: 0;
+	left: 0;
+
+	display: flex;
+	align-items: end;
+
+	width: 100%;
+	height: 100%;
+	border-radius: 5px;
+	padding: 0 18px 20px;
+
+	background: linear-gradient(
+		180deg,
+		rgba(255, 255, 255, 0) 0%,
+		rgba(0, 0, 0, 0.5) 64.58%,
+		#000000 100%
+	);
+}
+
+.selecionar-quizz .overlay {
+	position: absolute;
+	top: 0;
+	left: 0;
+
+	display: flex;
+	align-items: end;
+
+	width: 100%;
+	height: 100%;
+	border-radius: 5px;
+	padding: 0 18px 20px;
+
+	background: linear-gradient(
+		180deg,
+		rgba(255, 255, 255, 0) 0%,
+		rgba(0, 0, 0, 0.5) 64.58%,
+		#000000 100%
+	);
 }
 
 /* PAGINA QUIZZ */

@@ -43,8 +43,10 @@ function renderizarQuizzesGerais() {
 	for (let i = 0; i < todosQuizzesAPI.length; i++) {
 		quizzesProntos.innerHTML += `
         <div data-id="${todosQuizzesAPI[i].id}" onclick="extrairQuizzEscolhido(this)" class="selecionar-quizz">
-            <img src="${todosQuizzesAPI[i].image}">
-            <p>${todosQuizzesAPI[i].title}</p>
+			<img src="${todosQuizzesAPI[i].image}">
+			<div class='overlay'>
+				<p>${todosQuizzesAPI[i].title}</p>
+			
         </div>
         `;
 	}
@@ -59,7 +61,9 @@ function renderizarQuizzesProprios() {
 		quizzCriado.innerHTML += `
 		<div data-id="${todosQuizzesCriados[i].id}" onclick="extrairQuizzEscolhido(this)" class="selecionar-quizz">
             <img src="${todosQuizzesCriados[i].image}">
-            <p>${todosQuizzesCriados[i].title}</p>
+			<div class='overlay'>
+            	<p>${todosQuizzesCriados[i].title}</p>
+			</div>
         </div>
 		`;
 	}
@@ -434,9 +438,8 @@ function divPerguntas(i) {
 
 function divNiveis(i) {
 	return `<div class="form-container">
-						<div class="dobravel pergunta-numero" onclick="abrirCaixaDobravel(this)">Nível ${
-							i + 1
-						}
+						<div class="dobravel pergunta-numero" onclick="abrirCaixaDobravel(this)">Nível ${i + 1
+		}
 							<ion-icon name="create-outline" class="esconder"></ion-icon>
 						</div>
 
@@ -819,7 +822,9 @@ function renderizarTelaFinalCriarQuizz(objQuizzCriado) {
 	const conteudo = `<p>Seu quizz esta pronto!</p>
 				<div id="${objQuizzCriado.id}" class="selecionar-quizz">
 					<img src="${objQuizzCriado.image}">
-					<p>${objQuizzCriado.title}</p>
+					<div class='overlay'>
+						<p>${objQuizzCriado.title}</p>
+					</div>
 				</div>
 
 				<input type="button" data-id="${objQuizzCriado.id}" value="Acessar Quizz" onclick="extrairQuizzEscolhido(this)">
