@@ -69,8 +69,6 @@ ion-icon {
 }
 
 .caixa-criarQuizz p {
-	font-family: "Roboto", sans-serif;
-	font-style: normal;
 	text-align: center;
 	color: #b9b9b9;
 	font-weight: 400;
@@ -78,6 +76,7 @@ ion-icon {
 	line-height: 23px;
 	font-weight: 400;
 }
+
 .caixa-criarQuizz button {
 	color: #ec362d;
 	font-family: "Roboto", sans-serif;
@@ -152,16 +151,12 @@ ion-icon {
 	overflow-y: scroll;
 	max-height: 230px;
 }
-.container-quizzCriado div {
-	margin-right: 15px;
-}
+
 .caixa-todos-quizzes {
 	width: 1085px;
 	margin-top: 60px;
 	padding: 20px;
 	border-radius: 20px;
-
-	background-color: white;
 }
 
 .titulo-todos-quizzes {
@@ -174,52 +169,70 @@ ion-icon {
 	text-align: center;
 	font-style: normal;
 }
+
 .container-quizzes {
 	margin-top: 12px;
-	max-height: 300px;
+	max-height: 100vh;
 	overflow-y: scroll;
+
 	display: flex;
 	justify-content: flex-start;
 	flex-wrap: wrap;
+	gap: 15px;
 }
 
 .selecionar-quizz {
 	width: 320px;
 	height: 181px;
 	position: relative;
-	margin-bottom: 12px;
-	margin-right: 15px;
 
-	border: 2px solid rgb(128, 128, 128);
-	border-radius: 10px;
-
+	border-radius: 5px;
 	cursor: pointer;
+
+	transition: all 200ms ease-in;
 }
 
 .selecionar-quizz:hover {
-	filter: brightness(60%);
+	transform: scale(1.03);
 }
 
 .selecionar-quizz img {
 	width: 100%;
 	height: 100%;
-	border-radius: 8px;
+
+	border-radius: 5px;
 
 	object-fit: cover;
 }
 
 .selecionar-quizz p {
-	color: #ffffff;
-	font-family: "Roboto";
-	font-style: normal;
-	font-weight: 400;
+	color: #fff;
 	font-size: 19px;
 	line-height: 22px;
-	position: absolute;
-	bottom: 10px;
-	padding: 12px;
+	text-align: center;
 
 	word-break: break-all;
+}
+
+.selecionar-quizz .overlay {
+	position: absolute;
+	top: 0;
+	left: 0;
+
+	display: flex;
+	align-items: end;
+
+	width: 100%;
+	height: 100%;
+	border-radius: 5px;
+	padding: 0 18px 20px;
+
+	background: linear-gradient(
+		180deg,
+		rgba(255, 255, 255, 0) 0%,
+		rgba(0, 0, 0, 0.5) 64.58%,
+		#000000 100%
+	);
 }
 
 /* PAGINA QUIZZ */
