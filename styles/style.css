@@ -215,7 +215,7 @@ ion-icon {
 	display: flex;
 	justify-content: space-between;
 	flex-wrap: wrap;
-	gap: 15px;
+	gap: 10px;
 }
 
 .selecionar-quizz {
@@ -682,20 +682,23 @@ fieldset .legend,
 
 .conteudo-quizz-finalizado img {
 	height: 100%;
+	max-width: 50%;
 	object-fit: fill;
 
 	margin-right: 15px;
 }
 
 .conteudo-quizz-finalizado text {
-	width: 50%;
+	max-width: 50%;
 }
+
 .texto-quizz-finalizado {
 	font-weight: 700;
 	line-height: 25px;
 	word-wrap: break-word;
 	font-size: 20px;
 
+	word-break: break-all;
 	overflow-y: scroll;
 }
 
@@ -713,7 +716,8 @@ fieldset .legend,
 
 	border-radius: 10px;
 
-	margin-block: 15px;
+	margin-top: 100px;
+	margin-bottom: 15px;
 }
 
 .finalizar-quizz button:hover {
@@ -757,13 +761,17 @@ fieldset .legend,
 	}
 
 	.caixa-padrao {
-		width: 100%;
+		max-width: 80vw;
 	}
+	.conteudo-quizz-finalizado {
+		align-items: center;
+	}
+
 	.conteudo-quizz-finalizado {
 		flex-direction: column;
 	}
 
-	.conteudo-quizz-finalizado img {
+	.titulo-quizz-finalizado {
 		width: 100%;
 	}
 }
