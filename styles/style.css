@@ -21,6 +21,10 @@ ion-icon {
 	cursor: pointer;
 }
 
+input {
+	width: 100%;
+}
+
 /* BARRA TOPO FIXO */
 .topo-fixo-buzzquizz {
 	display: flex;
@@ -553,8 +557,8 @@ fieldset .legend,
 }
 
 .criar-quizz input[type="button"] {
-	height: 54px;
-	/* width: 370px; */
+	min-height: 54px;
+	word-break: break-all;
 
 	background: #ec362d;
 	color: #fff;
@@ -773,6 +777,15 @@ fieldset .legend,
 
 	.titulo-quizz-finalizado {
 		width: 100%;
+	}
+
+	.criar-quizz {
+		margin: 70px 0 0;
+		width: 100vw;
+	}
+
+	.criar-quizz input[type="button"] {
+		width: 324px;
 	}
 }
 
