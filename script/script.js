@@ -42,7 +42,7 @@ function renderizarQuizzesGerais() {
 	quizzesProntos.innerHTML = "";
 	for (let i = 0; i < todosQuizzesAPI.length; i++) {
 		quizzesProntos.innerHTML += `
-        <div data-id="${todosQuizzesAPI[i].id}" onclick="extrairQuizzEscolhido(this)" class="selecionar-quizz">
+        <div data-identifier="quizz-card" data-id="${todosQuizzesAPI[i].id}" onclick="extrairQuizzEscolhido(this)" class="selecionar-quizz">
 			<img src="${todosQuizzesAPI[i].image}">
 			<div class='overlay'>
 				<p>${todosQuizzesAPI[i].title}</p>
@@ -59,7 +59,7 @@ function renderizarQuizzesProprios() {
 	quizzCriado.innerHTML = "";
 	for (let i = 0; i < todosQuizzesCriados.length; i++) {
 		quizzCriado.innerHTML += `
-		<div data-id="${todosQuizzesCriados[i].id}" onclick="extrairQuizzEscolhido(this)" class="selecionar-quizz">
+		<div data-identifier="quizz-card" data-id="${todosQuizzesCriados[i].id}" onclick="extrairQuizzEscolhido(this)" class="selecionar-quizz">
             <img src="${todosQuizzesCriados[i].image}">
 			<div class='overlay'>
             	<p>${todosQuizzesCriados[i].title}</p>
@@ -438,8 +438,9 @@ function divPerguntas(i) {
 
 function divNiveis(i) {
 	return `<div class="form-container">
-						<div class="dobravel pergunta-numero" onclick="abrirCaixaDobravel(this)">Nível ${i + 1
-		}
+						<div class="dobravel pergunta-numero" onclick="abrirCaixaDobravel(this)">Nível ${
+							i + 1
+						}
 							<ion-icon name="create-outline" class="esconder"></ion-icon>
 						</div>
 
